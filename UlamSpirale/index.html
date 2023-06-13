@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ulam Spirale</title>
+    <link rel="icon" type="image/png" href="./icon192.png">
+    <style>
+      .hintergrund-schwarz {
+        background-color: #262626; 
+    }
+    </style>
+
+    <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./service-worker.js').then(function(registration) {
+          // Service Worker wurde registriert
+          console.log('Service Worker wurde registriert');
+        }, function(err) {
+          // Fehler bei der Registrierung des Service Workers
+          console.log('Fehler bei der Registrierung des Service Workers', err);
+        });
+      });
+    }
+    </script>
+    
+    <link rel="manifest" href="./manifest.json">
+  </head>
+
+
+  <body class="hintergrund-schwarz">
+
+    <canvas id="MeinCanvas" width="1200" height="1200"></canvas>
+
+    <script>
+
+      function isPrime(num) {
+        if (num < 2) return false;
+        for (let i = 2; i <= Math.sqrt(num); i++) {
+          if (num % i === 0) return false;
+        }
+        return true;
+      }
+    
+      let j = 2;
+      let j_max = 3;
+      function MaleUlamSpirale() {
+        var Canvas = document.getElementById("MeinCanvas");
+        ctx = Canvas.getContext("2d");
+        ctx.strokeStyle = "rgb(0, 0, 255)"; // blau
+        ctx.fillStyle = "rgb(0, 255, 0)"; // grün
+
+        let i = (j-2) * 1441201 + 2;
+        let n = MeinCanvas.width;
+        let m = MeinCanvas.height;
+        ctx.clearRect(0, 0, n, m );
+        ctx.strokeRect(0,0,n,m);
+
+        const center = Math.floor(n / 2);
+        let x = center;
+        let y = center;
+        let dx = 1;
+        let dy = 1;
+
+        for (let j = 1; j <= n; j++) {
+          for (let k = 1; k <= 2*j ; k++) {
+
+            if ( k <= j ){
+              x += dx }
+            else {
+              y += dy 
+            }
+
+            if (isPrime(i)) {
+              ctx.fillRect(x, y, 1, 1);
+            }
+
+            i++;
+            }
+
+            dx = -dx;
+            dy = -dy;
+        }
+
+        j++;
+		    if( j <= j_max )
+		    setTimeout( MaleUlamSpirale, 1000 );
+     
+      }
+		
+		  MaleUlamSpirale();
+  
+    </script>
+
+
+  </body>
+
+</html>

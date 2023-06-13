@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+ 
+  <meta charset="UTF-8">
+  
+  <TITLE>QuadratischeGleichung</TITLE>
+  <link rel="icon" type="image/png" href="./QGleichung192.png">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./service-worker.js').then(function(registration) {
+          // Service Worker wurde registriert
+          console.log('Service Worker wurde registriert');
+        }, function(err) {
+          // Fehler bei der Registrierung des Service Workers
+          console.log('Fehler bei der Registrierung des Service Workers', err);
+        });
+      });
+    }
+  </script>
+
+
+<link rel="manifest" href="./manifest.json">
+
+<SCRIPT LANGUAGE="JavaScript">
+
+function berechne(form)
+{
+form.ob1.value = "";
+form.ob2.value = "";
+form.ob3.value = "";
+form.ob4.value = "";
+form.ib1.value = eval(form.ib1.value);
+form.ib2.value = eval(form.ib2.value);
+form.ib3.value = eval(form.ib3.value);
+var a     = parseFloat(form.ib1.value);
+var b     = parseFloat(form.ib2.value);
+var c     = parseFloat(form.ib3.value);
+var now   = new Date();
+  if ( isNaN(a) )
+  {  a = 0;
+     form.ib1.value = "0";
+     alert("a ist  0");}
+  if ( isNaN(b) )
+  {  b = 0;
+     form.ib2.value = "0";
+     alert("b ist 0");}
+  if ( isNaN(c) )
+  {  c = 0;
+     form.ib3.value = "0";
+     alert("c ist 0");}
+  if( a == 0 )
+  { if ( b == 0)
+    { if ( c == 0 )
+      { form.ob1.value = "Keine Lösung, die Daten fehlen";
+        return;
+      }
+    }
+  }
+
+var d = b*b -4*a*c
+
+if ( d < 0 )
+  { 
+  var re = -b / (2 * a);
+  var im = Math.sqrt(-d) / (2*a);
+  var x1 = re + " - " + im + "i";
+  var x2 = re + " + " + im + "i"; 
+  }
+else
+  { 
+  var x1 = (-b - Math.sqrt(d)) / (2*a);
+  var x2 = (-b + Math.sqrt(d)) / (2*a);
+  }
+
+form.ob1.value = d;
+form.ob2.value = x1;
+form.ob3.value = x2;
+form.ob4.value = now;
+
+return;
+}
+
+</SCRIPT>
+</HEAD>
+
+<BODY BGCOLOR="#DDDDDD">
+<P>
+<FORM></P>
+
+<table width=700 border=4 cellpadding=10 >
+<TR>
+<TD width=50%>
+<H2 ALIGN=CENTER><B><FONT COLOR="#004080">
+Quadratische Gleichung</FONT></B></H2>
+<P><HR WIDTH="100%"><FONT COLOR="#004040">
+Das Programm berechnet die Lösungen der Qudratischen Gleichung ax²+bx+c=0.</FONT></P>
+
+<P> a=:<INPUT TYPE=text NAME=ib1>
+<P> b=:<INPUT TYPE=text NAME=ib2>  
+<P> c=:<INPUT TYPE=text NAME=ib3></P>
+</TD>
+<TD width=50%>
+<P><H8 ALIGN=RIGHT"><FONT COLOR="#004080">
+Copyright Zbigniew Synowiec 01.2022
+</FONT>
+<INPUT TYPE="text" SIZE=40 NAME="ob4">
+</P>
+<CENTER><P><INPUT TYPE=button NAME=BER VALUE="Berechnen" onclick=berechne(this.form)><HR></CENTER>
+<FONT COLOR="#004040"><FONT SIZE=+1>Ergebnisse:</FONT></FONT></P>
+
+<P><FONT COLOR="#400080">Diskriminante d= b² - 4ac </FONT><INPUT TYPE="text" SIZE=40 NAME="ob1">
+<P><FONT COLOR="#400080">x1= (-b - sqrt(d)) / 2a </FONT><INPUT TYPE="text" SIZE=40 NAME="ob2">
+<P><FONT COLOR="#400080">x2= (-b + sqrt(d)) / 2a </FONT><INPUT TYPE="text" SIZE=40 NAME="ob3">
+</P>
+</TD>
+</TR>
+</TABLE>
+</FORM>
+</BODY>
+</HTML>

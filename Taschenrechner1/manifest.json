@@ -1,0 +1,16 @@
+{
+    "name": "Taschenrechner1",
+    "short_name": "Rechner",
+    "theme_color": "#262626",
+    "background_color": "#262626",
+    "display": "standalone",
+    "start_url": "./index.html",
+    "description": "Taschenrechner1",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "./quadratwurzel.png",
+            "sizes": "192x192"
+        }
+    ]
+}
