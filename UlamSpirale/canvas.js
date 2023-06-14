@@ -10,7 +10,7 @@ let j = 2;
 let j_max = 3;
 function MaleUlamSpirale() {
     var Canvas = document.getElementById("MeinCanvas");
-    ctx = Canvas.getContext("2d");
+    var ctx = Canvas.getContext("2d");
     ctx.strokeStyle = "rgb(0, 0, 255)"; // blau
     ctx.fillStyle = "rgb(0, 255, 0)"; // grün
 

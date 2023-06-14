@@ -4,7 +4,9 @@ const cacheName = 'cache-v1';
 const precacheResources = [
   './',
   './index.html',
-  'https://rsy17.de/zibi/UlamSpirale/index.html'
+  './canvas.js',
+  './registersw.js',
+  './style.css'
 ];
 
 // When the service worker is installing, open the cache and add the precache resources to it
