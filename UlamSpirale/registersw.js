@@ -1,4 +1,5 @@
 // Register the service worker
+
 if ('serviceWorker' in navigator) {
     // Wait for the 'load' event to not block other work
     window.addEventListener('load', async () => {

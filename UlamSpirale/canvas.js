@@ -6,14 +6,15 @@ function isPrime(num) {
     return true;
 }
 
-let j = 2;
-let j_max = 3;
+let j = 1;
+//let j_max = 3;
 function MaleUlamSpirale() {
     var Canvas = document.getElementById("MeinCanvas");
     var ctx = Canvas.getContext("2d");
     ctx.strokeStyle = "rgb(0, 0, 255)"; // blau
     ctx.fillStyle = "rgb(0, 255, 0)"; // grün
 
+    if (j < 2) j = 2;
     let i = (j - 2) * 1441201 + 2;
     let n = MeinCanvas.width;
     let m = MeinCanvas.height;
@@ -47,9 +48,9 @@ function MaleUlamSpirale() {
         dy = -dy;
     }
 
-    j++;
-    if (j <= j_max)
-        setTimeout(MaleUlamSpirale, 1000);
+    // j++;
+    //if (j <= j_max)
+    //    setTimeout(MaleUlamSpirale, 1000);
 
 }
 
