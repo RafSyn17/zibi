@@ -12,10 +12,12 @@
 </head>
 
 <body class="hintergrund-schwarz">
-  <canvas id="MeinCanvas" width="1200" height="1200" onclick="j++; MaleUlamSpirale()" ondblclick= "j=2; MaleUlamSpirale()"></canvas>
+  <canvas id="MeinCanvas" width="1200" height="1200" onclick="j=InpF2.value; MaleUlamSpirale()" ondblclick="j=1; MaleUlamSpirale()"></canvas>
   <div class="center">
-    <img src = "img/PfeilLinks.png"  id="Knopf1" onclick= "j--; MaleUlamSpirale()">         
-    <img src = "img/PfeilRechts.png" id="Knopf2" onclick= "j++; MaleUlamSpirale()">
+    <img src = "img/PfeilLinks.png"  id="Knopf1" onclick= "j=InpF2.value; j--; MaleUlamSpirale()">         
+    <img src = "img/PfeilRechts.png" id="Knopf2" onclick= "j=InpF2.value; j++; MaleUlamSpirale()">
+    <input size=1 type="text" id="InpF1" value = "Seite: ">  
+    <input size=1 type="text" id="InpF2" value = 0>
   </div>
 
   <script>
@@ -35,8 +37,9 @@
     ctx.strokeStyle = "rgb(0, 0, 255)"; // blau
     ctx.fillStyle = "rgb(0, 255, 0)"; // grün
 
-    if (j < 2) j = 2;
-    let i = (j - 2) * 1441201 + 2;
+    if (j < 1) j = 1;
+    InpF2.value = j ;
+    let i = (j - 1) * 1441201 + 2;
     let n = MeinCanvas.width;
     let m = MeinCanvas.height;
     ctx.clearRect(0, 0, n, m);
@@ -75,7 +78,7 @@
 
     }
 
-   MaleUlamSpirale();
+  MaleUlamSpirale();
 
 </script>
 

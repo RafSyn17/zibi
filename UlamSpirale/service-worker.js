@@ -1,5 +1,5 @@
 // Choose a cache name
-const cacheName = 'cache-v1';
+const cacheName = 'cache-UlamSpirale';
 // List the files to precache
 const precacheResources = [
   './',
