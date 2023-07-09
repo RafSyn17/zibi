@@ -12,8 +12,8 @@
     margin-right: 10% ;
 }
 
-#InpF1, #InpF2 {
+#InpF1, #InpF2, #InpF3 {
     font-size: 50px;
-     color:rgb(49, 156, 0);
-     background-color: #262626;
+    color:rgb(49, 156, 0);
+    background-color: #262626;
 }
