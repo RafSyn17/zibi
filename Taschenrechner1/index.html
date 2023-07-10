@@ -101,11 +101,13 @@ function toM()
 {  //let Erg = document.getElementById('Dis');
    //let Mem = document.getElementById('Mem');
    Mem.value = Dis.value;
+   localStorage.setItem('meineZahl', Dis.value);
 }
 
 function fromM()
 {  //let Erg = document.getElementById('Dis');
    //let Mem = document.getElementById('Mem');
+   // addChar(localStorage.getItem('meineZahl'));
    addChar(Mem.value);
 }
 
@@ -274,7 +276,9 @@ function checkNum(str)
 
 
 </TABLE>
-
+<script>
+  Mem.value = localStorage.getItem('meineZahl')
+</script>
 </body>
 
 </html>

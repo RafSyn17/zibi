@@ -12,14 +12,16 @@
 </head>
 
 <body class="hintergrund-schwarz">
-  <canvas id="MeinCanvas" width="1200" height="1200" onclick="seite=InpF2.value; MaleUlamSpirale()"
-    ondblclick="seite=1; MaleUlamSpirale()"></canvas>
+  <div class="center">
+    <canvas id="MeinCanvas" width="1200" height="1200" onclick="seite=InpF2.value; MaleUlamSpirale()"
+      ondblclick="seite=1; MaleUlamSpirale()"></canvas>
+  </div>
   <div class="center">
     <img src="img/PfeilLinks.png" id="Knopf1" onclick="seite=InpF2.value; seite--; MaleUlamSpirale()">
     <img src="img/PfeilRechts.png" id="Knopf2" onclick="seite=InpF2.value; seite++; MaleUlamSpirale()">
     <input size=1 type="text" id="InpF1" value="Seite: ">
     <input size=1 type="text" id="InpF2" value=0>
-    <input        type ="text" id="InpF3" value = 0>
+    <input size=12 type="text" id="InpF3" value=0>
 
   </div>
 
@@ -34,9 +36,11 @@
 
     let seite = 1;
     let zahl, It, ItMax, dx, dy, ctx, n, x, y;
-    
+
     function malePunkt() {
-      if (ItMax > n)
+      //      if (ItMax > n)
+      //      if( zahl > seite*width*width )
+      if (zahl > seite * n * n)
         return false;
       if (It <= 2 * ItMax) {
         if (It <= ItMax)
@@ -61,16 +65,30 @@
       }
       return true;
     }
+    let width = 1200;
+    function malePunkt2() {
+      // if (zahl > seite*width*width)
+      if (zahl > seite * n * n)
+        return false;
+      if (isPrime(zahl)) {
+        let posi = zahl % (width * width);
+        let x = posi % width;
+        let y = Math.floor(posi / width);
+        InpF3.value = zahl;
+        ctx.fillRect(x, y, 1, 1);
+      }
+      zahl++;
+      return true;
+    }
 
     function malePunkte() {
       let start = Date.now();
-      while (Date.now() - start < 100) {
+      while (Date.now() - start < 8) {
         if (!malePunkt())
-          //return;
-          break;
+          return;
+        //break;
       }
-         setTimeout(malePunkte, 0);
-      
+      setTimeout(malePunkte, 0);
     }
 
     function MaleUlamSpirale() {
@@ -81,9 +99,10 @@
 
       if (seite < 1) seite = 1;
       InpF2.value = seite;
-      zahl = (seite - 1) * 1441201 + 2;
       n = MeinCanvas.width;
       let m = MeinCanvas.height;
+      // zahl = (seite - 1) * width * width; //1441201 + 2;
+      zahl = (seite - 1) * n * n + 2; //1441201 + 2;
       ctx.clearRect(0, 0, n, m);
       ctx.strokeRect(0, 0, n, m);
 
