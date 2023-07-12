@@ -6,7 +6,13 @@
     display: flex;
     justify-content: center;
 }
-#Knopf1,#Knopf2 {
+#Knopf1 {
+    background-color:green;
+    margin-left: 27em ;
+    margin-right: 1em ;
+}
+
+#Knopf2 {
     background-color:green;
     margin-right: 1em ;
 }
