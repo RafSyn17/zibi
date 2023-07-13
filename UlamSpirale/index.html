@@ -19,13 +19,19 @@
   <div class="center">
     <img src="img/PfeilLinks.png" id="Knopf1" onclick="seite=InpF2.value; seite--; MaleUlamSpirale()">
     <img src="img/PfeilRechts.png" id="Knopf2" onclick="seite=InpF2.value; seite++; MaleUlamSpirale()">
-    <input size=1 type="text" id="InpF1" value="Seite: ">
-    <input size=1 type="text" id="InpF2" value=0 onabort="seite=InpF2.value; MaleUlamSpirale()">
+    <input size=1 type="number" max=12 id="InpF1" value="8">
+    <input size=1 type="number" max="99999" id="InpF2" value=0 onclick="seite=InpF2.value; MaleUlamSpirale()">
     <input size=8 type="text" id="InpF3" value=0>
 
   </div>
 
   <script>
+
+    let Skalierung, Faktor, dm, It, ItMax, n, zahl, zahlMax, seite, dx, dy, ctx, x, y;
+    seite = 1;
+    ItMax = 1                   // die Größe des einzelnen "Punktes"
+
+
     function isPrime(num) {
       if (num < 2) return false;
       for (let i = 2; i <= Math.sqrt(num); i++) {
@@ -34,15 +40,12 @@
       return true;
     }
 
-    let seite = 1;
-    let Skalierung = 3;
-    let zahl, It, ItMax, dx, dy, ctx, n, x, y, Faktor, dm;
-
     function malePunkt() {
       //      if (ItMax > n)
       //      if( zahl > seite*width*width )
 
-      if (zahl > seite * n * n / (Faktor * Faktor))
+      //    if (zahl > seite * n * n / (Faktor * Faktor))
+      if (zahl > seite * zahlMax)
         return false;
       if (It <= 2 * ItMax) {
         if (It <= ItMax)
@@ -51,41 +54,40 @@
           y += dy;
 
         if (isPrime(zahl)) {
-          // ctx.fillRect(x, y, 1, 1);
           ctx.fillRect(x, y, Faktor, Faktor);
-
+          //ctx.beginPath();
+          //ctx.arc(x + dm, y + dm, dm, 0, 2 * Math.PI, false);
+          //ctx.strokeStyle = "yellow";
+          //ctx.stroke();
           InpF3.value = zahl;
-          // didPaint = true;
         }
         else {
+          // innen oben oder unten 
           if (It < ItMax)
             ctx.fillRect(x, y + dm, Faktor, 1);
-
+          // Ecke oben rechts
           if (It == ItMax & dx > 0) {
             ctx.fillRect(x, y + dm, dm + 1, 1);
             ctx.fillRect(x + dm, y + dm, 1, dm + 1);
           };
-
+          // Ecke unten links
           if (It == ItMax & dx < 0) {
-            ctx.fillRect(x + dm, y , 1, dm + 1);
+            ctx.fillRect(x + dm, y, 1, dm + 1);
             ctx.fillRect(x + dm, y + dm, dm + 1, 1);
           };
-
+          // innen links oder rechts
           if (It > ItMax & It < 2 * ItMax)
             ctx.fillRect(x + dm, y, 1, Faktor);
-
-
+          // Ecke unten rechts
           if (It == 2 * ItMax & dx > 0) {
             ctx.fillRect(x + dm, y, 1, dm + 1);
             ctx.fillRect(x, y + dm, dm + 1, 1);
           };
-
+          // Ecke oben links
           if (It == 2 * ItMax & dx < 0) {
             ctx.fillRect(x + dm, y + dm, dm + 1, 1);
             ctx.fillRect(x + dm, y + dm, 1, dm + 1);
           };
-
-
 
         };
 
@@ -100,15 +102,18 @@
       }
       return true;
     }
-    let width = 1200;
+
+    //let width = 1200;
     function malePunkt2() {
       // if (zahl > seite*width*width)
-      if (zahl > seite * n * n)
+      // if (zahl > seite * n * n)
+      if (zahl > seite * zahlMax)
         return false;
       if (isPrime(zahl)) {
-        let posi = zahl % (width * width);
-        let x = posi % width;
-        let y = Math.floor(posi / width);
+        // let posi = zahl % (n * n);
+        let posi = zahl % zahlMax;
+        let x = posi % n;
+        let y = Math.floor(posi / n);
         InpF3.value = zahl;
         ctx.fillRect(x, y, 1, 1);
       }
@@ -119,10 +124,9 @@
 
     function malePunkte() {
       let start = Date.now();
-      while (Date.now() - start < 8) {
+      while (Date.now() - start < 3) {
         if (!malePunkt())
           return;
-        //break;
       }
       setTimeout(malePunkte, 0);
     }
@@ -133,23 +137,24 @@
       ctx.strokeStyle = "rgb(0, 0, 255)"; // blau
       ctx.fillStyle = "rgb(0, 255, 0)"; // grün
 
+
+      //let Skalierung = 8;
+      Skalierung = InpF1.value;
+      Faktor = 2 * Skalierung - 1; // die Länge der Spiralenseite in "Punkten"
+      dm = Skalierung - 1;         // Differenz zu Mitte
+      n = MeinCanvas.width;
+      const center = Math.floor(n / 2);
+      zahlMax = Math.pow(n / Faktor, 2);
+      zahlMax = Math.floor(zahlMax);
+
       if (seite < 1) seite = 1;
       InpF2.value = seite;
-      Faktor = 2 * Skalierung - 1; // Seitenlänge von vergrössertem Quadrat
-      dm = Skalierung - 1; // Differenz zu Mitte
-      n = MeinCanvas.width;
-      let m = MeinCanvas.height;
-      // zahl = (seite - 1) * width * width; //1441201 + 2;
-      zahl = (seite - 1) * n * n / (Faktor * Faktor) + 2; //1441201 + 2;
-      ctx.clearRect(0, 0, n, m);
-      ctx.strokeRect(0, 0, n, m);
+      zahl = (seite - 1) * zahlMax + 2; //1441201 + 2;
+      ctx.clearRect(0, 0, n, n);
+      ctx.strokeRect(0, 0, n, n);
 
-      const center = Math.floor(n / 2);
       x = center;
       y = center;
-      //dx = 1;
-      //dy = 1;
-
       dx = Faktor;
       dy = Faktor;
       ItMax = 1;
