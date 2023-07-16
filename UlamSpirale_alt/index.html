@@ -1,116 +1,190 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Ulam Spirale</title>
-    
-    <style>
-      .hintergrund-schwarz {
-        background-color: #262626; 
-    }
-      .center {
-        display: flex;
-        justify-content: center;
-    }
-      #Knopf1,#Knopf2 {
-        background-color:green;
-        margin-right: 15% ;
-        
-    }
+<html lang="de">
 
-    </style>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="./icon192.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ulam Spirale</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script type="module" src="./registersw.js"></script>
+  <link rel="manifest" href="./app.webmanifest">
+</head>
 
-    <script>
+<body class="hintergrund-schwarz">
+  <div class="center">
+    <canvas id="MeinCanvas" width="1200" height="1200" onclick="InpF2.value++; MaleUlamSpirale()"
+      ondblclick="Seite=InpF2.value; Seite--; MaleUlamSpirale()"></canvas>
+  </div>
+  <div class="center">
+    <img src="img/PfeilRechts.png" id="Knopf2" onclick="InpF2.value++; MaleUlamSpirale()">
+    <img src="img/PfeilLinks.png" id="Knopf1" onclick="InpF2.value--; MaleUlamSpirale()">
+    <input size=1 type="number" min=1 max=20 id="InpF1" value="8" onclick="MaleUlamSpirale()">
+    <input size=1 type="number" min=1 max=99999 id="InpF2" value=1 onclick="MaleUlamSpirale()">
+    <input size=8 type="text" id="InpF3" value=0>
 
-    /**
-   if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js').then(function(registration) {
-          // Service Worker wurde registriert
-          console.log('Service Worker wurde registriert');
-        }, function(err) {
-          // Fehler bei der Registrierung des Service Workers
-          console.log('Fehler bei der Registrierung des Service Workers', err);
-        });
-      });
-    }
-      **/
-      
-    </script>
-  
-    <link rel="manifest" href="manifest.json">
-  </head>
+  </div>
 
-  <body class="hintergrund-schwarz">
-  
-    <canvas id="MeinCanvas" width="1200" height="1200" onclick="j++; MaleUlamSpirale()" ondblclick= "j=2; MaleUlamSpirale()"></canvas>
+  <script>
 
-    <div class="center">
-      <img src = "img/PfeilLinks.png"  id="Knopf1" onclick= "j--; MaleUlamSpirale()">         
-      <img src = "img/PfeilRechts.png" id="Knopf2" onclick= "j++; MaleUlamSpirale()">
-    </div>
+    let Skalierung, Faktor, dm, It, ItMax, n, Zahl, ZahlMax, Seite, dx, dy, ctx, x, y;
+    Seite = 1;
+    ItMax = 1;                   // die Größe des einzelnen "Punktes"
 
-    <script>
 
-      let j = 1;
-      // let j_max = 4;
-
-      function isPrime(num) {
-        if (num < 2) return false;
-        for (let i = 2; i <= Math.sqrt(num); i++) {
-          if (num % i === 0) return false;
-        }
-        return true;
+    function isPrime(num) {
+      if (num < 2) return false;
+      for (let i = 2; i <= Math.sqrt(num); i++) {
+        if (num % i === 0) return false;
       }
-    
-      function MaleUlamSpirale() {
-        var Canvas = document.getElementById("MeinCanvas");
-        ctx = Canvas.getContext("2d");
-        ctx.strokeStyle = "rgb(0, 0, 255)"; // blau
-        ctx.fillStyle = "rgb(0, 255, 0)"; // grün
+      return true;
+    }
 
-        if (j < 2) j = 2;
-        let i = (j-2) * 1441201 + 2;
-        let n = MeinCanvas.width;
-        let m = MeinCanvas.height;
-        ctx.clearRect(0, 0, n, m );
-        ctx.strokeRect(0,0,n,m);
+    function malePunkt() {
+      //      if (ItMax > n)
+      //      if( zahl > seite*width*width )
 
-        const center = Math.floor(n / 2);
-        let x = center;
-        let y = center;
-        let dx = 1;
-        let dy = 1;
+      //    if (zahl > seite * n * n / (Faktor * Faktor))
+      if (Zahl > Seite * ZahlMax)
+        return false;
+      if (It <= 2 * ItMax) {
+        if (It <= ItMax)
+          x += dx;
+        else
+          y += dy;
 
-        for (let j = 1; j <= n; j++) {
-          for (let k = 1; k <= 2*j ; k++) {
-
-            if ( k <= j ){
-              x += dx }
-            else {
-              y += dy 
-            }
-
-            if (isPrime(i)) {
-              ctx.fillRect(x, y, 1, 1);
-            }
-
-            i++;
-            }
-
-            dx = -dx;
-            dy = -dy;
+        if (isPrime(Zahl)) {
+          ctx.fillStyle = "lime";
+          ctx.fillRect(x, y, Faktor, Faktor);
+          ctx.fillText(Zahl, x, y);
+          //ctx.beginPath();
+          //ctx.arc(x + dm, y + dm, dm, 0, 2 * Math.PI, false);
+          //ctx.strokeStyle = "yellow";
+          //ctx.stroke();
+          InpF3.value = Zahl;
         }
+        else {
+          ctx.fillStyle = "grey";
+          // innen oben oder unten 
+          if (It < ItMax)
+            ctx.fillRect(x, y + dm, Faktor, 1);
 
-        // j++;
-        // if( j <= j_max )
-		    // setTimeout( MaleUlamSpirale, 1000 );
-	      
+          // Ecke oben rechts
+          if (It == ItMax & dx > 0) {
+            ctx.fillRect(x, y + dm, dm + 1, 1);
+            ctx.fillRect(x + dm, y + dm, 1, dm + 1);
+          };
+          // Ecke unten links
+          if (It == ItMax & dx < 0) {
+            ctx.fillRect(x + dm, y, 1, dm + 1);
+            ctx.fillRect(x + dm, y + dm, dm + 1, 1);
+          };
+          // innen links oder rechts
+          if (It > ItMax & It < 2 * ItMax)
+            ctx.fillRect(x + dm, y, 1, Faktor);
+
+          // Ecke unten rechts
+          if (It == 2 * ItMax & dx > 0) {
+            ctx.fillRect(x + dm, y, 1, dm + 1);
+            ctx.fillRect(x, y + dm, dm + 1, 1);
+          };
+          // Ecke oben links
+          if (It == 2 * ItMax & dx < 0) {
+            ctx.fillRect(x + dm, y + dm, dm + 1, 1);
+            ctx.fillRect(x + dm, y + dm, 1, dm + 1);
+          };
+
+        };
+
+        Zahl++;
+        It++;
       }
-		
-		  MaleUlamSpirale();
-  
-    </script>
-    
-  </body>
+      else {
+        dx = -dx;
+        dy = -dy;
+        ItMax++;
+        It = 1;
+      }
+      return true;
+    }
+
+    //let width = 1200;
+    function malePunkt2() {
+      // if (zahl > seite*width*width)
+      // if (zahl > seite * n * n)
+      if (Zahl > Seite * ZahlMax)
+        return false;
+      if (isPrime(Zahl)) {
+        // let posi = zahl % (n * n);
+        let posi = Zahl % ZahlMax;
+        let x = posi % n;
+        let y = Math.floor(posi / n);
+        InpF3.value = Zahl;
+        ctx.fillRect(x, y, 1, 1);
+      }
+
+      Zahl++;
+      return true;
+    }
+
+    function malePunkte() {
+      let start = Date.now();
+      while (Date.now() - start < 3) {
+        if (!malePunkt())
+          return;
+      }
+      setTimeout(malePunkte, 0);
+    }
+
+    function MaleUlamSpirale() {
+      var Canvas = document.getElementById("MeinCanvas");
+      ctx = Canvas.getContext("2d");
+      ctx.strokeStyle = "rgb(0, 0, 255)"; // blau
+      ctx.fillStyle = "rgb(0, 255, 0)"; // grün
+
+
+      //let Skalierung = 8;
+      Skalierung = InpF1.value;
+      if (Skalierung < 1) {
+        InpF1.value = 1;
+        return;
+      }
+      Faktor = 2 * Skalierung - 1; // die Länge der Spiralenseite in "Punkten"
+      dm = Skalierung - 1;         // Differenz zu Mitte
+      n = MeinCanvas.width;
+      const center = Math.floor(n / 2);
+      ZahlMax = Math.pow(n / Faktor, 2);
+      ZahlMax = Math.floor(ZahlMax);
+
+      Seite = InpF2.value;
+      if (Seite < 1) {
+        InpF2.value = 1;
+        return;
+      }
+      //InpF2.value = seite;
+      Zahl = (Seite - 1) * ZahlMax + 1; //1441201 + 1;
+      ctx.clearRect(0, 0, n, n);
+      ctx.strokeRect(0, 0, n, n);
+
+      x = center;
+      y = center;
+      dx = Faktor;
+      dy = Faktor;
+      ItMax = 1;
+      It = 1;
+
+      // requestAnimationFrame(malePunkt);
+      malePunkte();
+      // j++;
+      //if (j <= j_max)
+      //    setTimeout(MaleUlamSpirale, 1000);
+
+    }
+
+    MaleUlamSpirale();
+
+  </script>
+
+</body>
 
 </html>

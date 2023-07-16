@@ -3,13 +3,14 @@
     "short_name": "Ulam",
     "theme_color": "#ffcbe4",
     "background_color": "#fa99ca",
-    "display": "standalone",
-    "start_url": "index.html",
+    "display": "fullscreen",
+    "start_url": "./index.html",
+    "id": "ulam",
     "description": "Ulam Spirale Zeichnung",
-    "orientation": "any",
+    "orientation": "landscape",
     "icons": [
         {
-            "src": "icon192.png",
+            "src": "./icon192.png",
             "sizes": "192x192"
         }
     ]
