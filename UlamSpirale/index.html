@@ -23,8 +23,9 @@
     <img src="img/PfeilUnten.png" id="Knopf1" onclick="InpF2.value--; MaleUlamSpirale()">
     <input size=1 type="number" min=1 max=99999 id="InpF2" value=1 onclick="MaleUlamSpirale()">
     <input size=7 type="text" id="InpF3" value=0 readonly>
-    <input size=2 type="checkbox" Name="Zahlen" id="InpF4" onclick="MaleUlamSpirale()">
-    <input size=2 type="checkbox" Name="Linien" id="InpF5" onclick="MaleUlamSpirale()">
+    <input size=2 type="checkbox" Name="Zahlen" id="CBF4" onclick="MaleUlamSpirale()">
+    <input size=2 type="checkbox" Name="Linien" id="CBF5" onclick="MaleUlamSpirale()">
+    <input size=2 type="checkbox" Name="Matrix" id="CBF6" onclick="InpF1.value=18; MaleUlamSpirale()">
 
   </div>
 
@@ -44,10 +45,6 @@
     }
 
     function malePunkt() {
-      //      if (ItMax > n)
-      //      if( zahl > seite*width*width )
-
-      //    if (zahl > seite * n * n / (Faktor * Faktor))
       if (Zahl > ZahlMax)
         return false;
 
@@ -56,18 +53,17 @@
           x += dx;
         else
           y += dy;
-        
 
         if (isPrime(Zahl)) {
 
-          if (InpF4.checked == true) {
+          if (CBF4.checked == true) {
+            ctx.fillStyle = "lime";
             ctx.fillText(Zahl, x, y + dm);
           }
 
           if (Skalierung == 1) {
             ctx.fillStyle = "lime";
             ctx.fillRect(x, y, Faktor, Faktor);
-
           }
 
           else {
@@ -88,126 +84,102 @@
 
           ctx.stroke();
 
-        
-        //Die Primzahl in dem Textfeld InpF3 unten rechts anzeigen
-        InpF3.value = Zahl;
-      }
-
-      else {
-
-
-        ctx.fillStyle = "grey";
-        // Opazität der Linien verkleinenrn (Transparenz vergrößern)
-        // ctx.globalAlpha = 0.4;
-
-        // nur experimentieler Test
-        //if (InpF4.checked == true) {
-        //  ctx.fillText(Zahl, x, y + dm);
-        //}
-
-
-        if (InpF5.checked == true) {
-
-          switch (true) {
-            case (It < ItMax):
-              // innen oben oder unten wagerecht
-              ctx.fillRect(x, y + dm, Faktor, 1);
-              break;
-
-            case (It == ItMax):
-              if (dx > 0) {
-                // Ecke oben rechts
-                ctx.fillRect(x, y + dm, dm + 1, 1);
-                ctx.fillRect(x + dm, y + dm, 1, dm + 1);
-              }
-              else {
-                // Ecke unten links
-                ctx.fillRect(x + dm, y, 1, dm + 1);
-                ctx.fillRect(x + dm, y + dm, dm + 1, 1);
-              }
-              break;
-
-            case ((It > ItMax) && (It < 2 * ItMax)):
-              // innen links oder rechts senkrecht
-              ctx.fillRect(x + dm, y, 1, Faktor);
-              break;
-
-            case (It == 2 * ItMax):
-              if (dx > 0) {
-                // Ecke unten rechts
-                ctx.fillRect(x + dm, y, 1, dm + 1);
-                ctx.fillRect(x, y + dm, dm + 1, 1);
-              }
-              else {
-                // Ecke oben links
-                ctx.fillRect(x + dm, y + dm, dm + 1, 1);
-                ctx.fillRect(x + dm, y + dm, 1, dm + 1);
-              }
-          }
-          // volle Opazität
-          ctx.globalAlpha = 1;
-
+          //Die aktuelle Primzahl in dem Textfeld InpF3 unten rechts anzeigen
+          InpF3.value = Zahl;
         }
 
-        /*
-                  // innen oben oder unten 
-                  if (It < ItMax)
-                    ctx.fillRect(x, y + dm, Faktor, 1);
-        
+        else {
+
+          ctx.fillStyle = "grey";
+          // nur ein experimenteller Test. Opazität der Linien verkleinenrn (Transparenz vergrößern)
+          // ctx.globalAlpha = 0.4;
+
+          // nur ein experimenteller Test.  Auch die nicht Primzahlen anzeigen
+          //if (CBF4.checked == true) {
+          //  ctx.fillText(Zahl, x, y + dm);
+          //}
+
+          if (CBF5.checked == true) {
+
+            switch (true) {
+              case (It < ItMax):
+                // innen oben oder unten wagerecht
+                ctx.fillRect(x, y + dm, Faktor, 1);
+                break;
+
+              case (It == ItMax):
+                if (dx > 0) {
                   // Ecke oben rechts
-                  if (It == ItMax & dx > 0) {
-                    ctx.fillRect(x, y + dm, dm + 1, 1);
-                    ctx.fillRect(x + dm, y + dm, 1, dm + 1);
-                  };
+                  ctx.fillRect(x, y + dm, dm + 1, 1);
+                  ctx.fillRect(x + dm, y + dm, 1, dm + 1);
+                }
+                else {
                   // Ecke unten links
-                  if (It == ItMax & dx < 0) {
-                    ctx.fillRect(x + dm, y, 1, dm + 1);
-                    ctx.fillRect(x + dm, y + dm, dm + 1, 1);
-                  };
-                  // innen links oder rechts
-                  if (It > ItMax & It < 2 * ItMax)
-                    ctx.fillRect(x + dm, y, 1, Faktor);
-        
+                  ctx.fillRect(x + dm, y, 1, dm + 1);
+                  ctx.fillRect(x + dm, y + dm, dm + 1, 1);
+                }
+                break;
+
+              case ((It > ItMax) && (It < 2 * ItMax)):
+                // innen links oder rechts senkrecht
+                ctx.fillRect(x + dm, y, 1, Faktor);
+                break;
+
+              case (It == 2 * ItMax):
+                if (dx > 0) {
                   // Ecke unten rechts
-                  if (It == 2 * ItMax & dx > 0) {
-                    ctx.fillRect(x + dm, y, 1, dm + 1);
-                    ctx.fillRect(x, y + dm, dm + 1, 1);
-                  };
+                  ctx.fillRect(x + dm, y, 1, dm + 1);
+                  ctx.fillRect(x, y + dm, dm + 1, 1);
+                }
+                else {
                   // Ecke oben links
-                  if (It == 2 * ItMax & dx < 0) {
-                    ctx.fillRect(x + dm, y + dm, dm + 1, 1);
-                    ctx.fillRect(x + dm, y + dm, 1, dm + 1);
-                  };
-        
-        */
+                  ctx.fillRect(x + dm, y + dm, dm + 1, 1);
+                  ctx.fillRect(x + dm, y + dm, 1, dm + 1);
+                }
+            }
+            // volle Opazität
+            ctx.globalAlpha = 1;
+
+          }
+        }
+
+        Zahl++;
+        It++;
       }
 
-      Zahl++;
-      It++;
-    }
-
       else {
-      dx = -dx;
-      dy = -dy;
-      ItMax++;
-      It = 1;
-    }
-    return true;
+        dx = -dx;
+        dy = -dy;
+        ItMax++;
+        It = 1;
+      }
+      return true;
     }
 
     //let width = 1200;
     function malePunkt2() {
       // if (zahl > seite*width*width)
-      // if (zahl > seite * n * n)
-      if (Zahl > Seite * ZahlMax)
+      let Breite = Math.floor(n / Faktor);
+
+      if (Zahl > Seite * Breite * Breite)
         return false;
+      let posi = (Zahl - 1) % (Breite * Breite) + 1
+      let x = ((posi - 1) % Breite) * Faktor;
+      let y = Math.floor((posi - 1) / Breite) * Faktor + Faktor;
+      InpF3.value = Zahl;
+
       if (isPrime(Zahl)) {
-        // let posi = zahl % (n * n);
-        let posi = Zahl % ZahlMax;
-        let x = posi % n;
-        let y = Math.floor(posi / n);
-        InpF3.value = Zahl;
-        ctx.fillRect(x, y, 1, 1);
+        ctx.fillStyle = "lime";
+        ctx.fillText(Zahl, x, y, Faktor, Faktor);
+      }
+      else {
+        //if (CBF4.checked == true) {
+        if (InpF1.value > 1) {
+          ctx.fillStyle = "grey";
+          ctx.fillText(Zahl, x, y, Faktor, Faktor);
+        }
+        //}
+        //ctx.fillRect(x, y, Faktor, Faktor);
       }
 
       Zahl++;
@@ -216,9 +188,19 @@
 
     function malePunkte() {
       let start = Date.now();
-      while (Date.now() - start < 5) {
-        if (!malePunkt())
-          return;
+      while (Date.now() - start < 3) {
+
+        if (CBF6.checked) {
+          //$('$CBF4.hide')();
+          if (!malePunkt2())
+            return;
+        }
+        else {
+          if (!malePunkt())
+            return;
+
+        };
+
       }
       setTimeout(malePunkte, 0);
     }
@@ -263,10 +245,10 @@
       }
       Zahl = ZahlMin;
 
-      //if (Seite < 1) {
-      //  InpF2.value = 1;
-      //  return;
-      // }
+      if (CBF6.checked) {
+
+        Zahl = (Seite - 1) * Math.pow(ZahlenProQuadratSeite + 1, 2) + 1;
+      }
 
       //InpF2.value = seite;
       // Zahl = (Seite - 1) * ZahlMax + 1; //1441201 + 1;
