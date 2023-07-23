@@ -147,4 +147,5 @@ body {
     border: 1px solid #ccc;
     padding: 10px;
     display: none; /* Verstecken des Tooltips */
+    font-size: 3em; /* Setzt die Schriftgröße auf das Doppelte der Standardgröße */
   }
