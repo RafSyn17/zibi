@@ -1,0 +1,150 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+#canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#buttonContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.arrowButton {
+    pointer-events: auto;
+    background-color: #3498db;
+    color: #ffffff;
+    font-size: clamp(1.5rem, 3vw, 3rem);
+    /* Erhöhte Skalierung von Schriftgrad zwischen 1.5rem und 3rem, basierend auf der Viewport-Breite */
+    padding: clamp(1rem, 2vw, 2rem) clamp(2rem, 4vw, 4rem);
+    /* Erhöhter Abstand skaliert zwischen 1rem und 2rem vertikal und zwischen 2rem und 4rem horizontal, basierend auf der Viewport-Breite */
+    border: none;
+    border-radius: 5px;
+}
+
+/* Anwendung spezieller Stile, wenn der Viewport größer als 1024px ist */
+@media (min-width: 1024px) {
+    .arrowButton {
+        font-size: 2rem;
+        /* Festgelegte Schriftgröße für größere Bildschirme */
+        padding: 1.5rem 3rem;
+        /* Festgelegter Abstand für größere Bildschirme */
+    }
+}
+
+
+.arrowButton:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+#upButton {
+    margin-bottom: auto;
+}
+
+#downButton {
+    margin-top: auto;
+}
+
+#leftButton {
+    margin-right: auto;
+}
+
+#rightButton {
+    margin-left: auto;
+}
+
+/* Stiländerungen für :hover-Pseudoklasse */
+.arrowButton:hover {
+    background-color: #2980b9;
+    cursor: pointer;
+}
+
+#centerButtonContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 10px;
+}
+
+.centerButton {
+    pointer-events: auto;
+    background-color: #3498db;
+    color: #ffffff;
+    font-size: clamp(1.5rem, 3vw, 3rem);
+    padding: clamp(1rem, 2vw, 2rem) clamp(2rem, 4vw, 4rem);
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+@media (min-width: 1024px) {
+    .centerButton {
+        font-size: 2rem;
+        padding: 1.5rem 3rem;
+    }
+}
+
+.centerButton:hover {
+    background-color: #2980b9;
+    cursor: pointer;
+}
+
+#zoomButtonContainer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+.zoomButton {
+    pointer-events: auto;
+    background-color: #3498db;
+    color: #ffffff;
+    font-size: clamp(1.5rem, 3vw, 3rem);
+    padding: clamp(1rem, 2vw, 2rem) clamp(2rem, 4vw, 4rem);
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+@media (min-width: 1024px) {
+    .zoomButton {
+        font-size: 2rem;
+        padding: 1.5rem 3rem;
+    }
+}
+
+.zoomButton:hover {
+    background-color: #2980b9;
+    cursor: pointer;
+}
+
+#tooltip {
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: none; /* Verstecken des Tooltips */
+  }
