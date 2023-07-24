@@ -20,6 +20,32 @@ let canvas;
 let ctx;
 let tooltip;
 let timer;
+let sieve = new SegmentedSieve();
+let useEraSieve = true;
+let storePrimeSimpleResults = true;
+let storedSimpleResults = {};
+
+function isPrimeSimpleStore(x) {
+    if (storedSimpleResults.hasOwnProperty(x))
+        return storedSimpleResults[x];
+    let result = isPrimeSimple(x);
+    storedSimpleResults[x] = result;
+    return result;
+}
+
+function isPrimeSieve(x) {
+    const step = 1000000;
+    const gen = Math.ceil(x / step) * step;
+    sieve.generatePrimesUpTo(gen);
+    return sieve.isPrime(x);
+}
+
+function isPrime(x) {
+    if (useEraSieve)
+        return isPrimeSieve(x);
+    else
+        return isPrimeSimpleStore(x);
+}
 
 function setXOff(x) {
     xOff = Math.round(x);
