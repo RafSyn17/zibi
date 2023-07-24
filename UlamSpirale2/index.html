@@ -8,6 +8,7 @@
   <script src="measureExecutionTime.js"></script>
   <script src="script.js"></script>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -33,6 +34,35 @@
     <button class="arrowButton" id="downButton">↓</button>
   </div>
   <div id="tooltip"></div>
+
+  <!-- Der Settings-Button mit dem Zahnrad-Symbol -->
+  <div id="settingsButtonContainer">
+    <button class="settingsButton" id="settingsButton"><i class="fa fa-cog"></i></button>
+  </div>
+
+  <!-- Das Settings-Popup -->
+  <div id="settingsPopup" class="settingsPopup">
+    <div class="settingsContent">
+      <span class="close">&times;</span>
+      <h2>Einstellungen (In Construction)</h2>
+      <label for="zoomFactorIn">Zoom Factor In:</label>
+      <input type="number" id="zoomFactorIn" name="zoomFactorIn">
+      <br>
+      <label for="zoomFactorOut">Zoom Factor Out:</label>
+      <input type="number" id="zoomFactorOut" name="zoomFactorOut">
+      <br>
+      <label for="saveIntermediate">Zwischenergebenisse speichern:</label>
+      <input type="checkbox" id="saveIntermediate" name="saveIntermediate">
+      <br>
+      <label for="useOption">Option auswählen:</label>
+      <input type="radio" id="useA" name="useOption" value="A">
+      <label for="useA">UseA</label>
+      <input type="radio" id="useB" name="useOption" value="B">
+      <label for="useB">UseB</label>
+      <br>
+      <button id="saveSettings">Speichern</button>
+    </div>
+  </div>
 </body>
 
 </html>

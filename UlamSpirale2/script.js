@@ -191,4 +191,31 @@ window.onload = function () {
             tooltip.style.display = 'none';
         }, 2000); // Versteckt den Tooltip nach 2 Sekunden
     });
+
+    // Holen Sie sich das Popup
+    var settingsPopup = document.getElementById("settingsPopup");
+
+    // Holen Sie sich den Button, der das Popup öffnet
+    var settingsButton = document.getElementById("settingsButton");
+
+    // Holen Sie sich das <span>-Element, das das Popup schließt
+    var close = document.getElementsByClassName("close")[0];
+
+    // Wenn der Benutzer auf den Button klickt, öffnen Sie das Popup
+    settingsButton.onclick = function () {
+        settingsPopup.style.display = "block";
+    }
+
+    // Wenn der Benutzer auf <span> (x) klickt, schließen Sie das Popup
+    close.onclick = function () {
+        settingsPopup.style.display = "none";
+    }
+
+    // Wenn der Benutzer irgendwo außerhalb des Popups klickt, schließen Sie es
+    window.onclick = function (event) {
+        if (event.target == settingsPopup) {
+            settingsPopup.style.display = "none";
+        }
+    }
+
 }

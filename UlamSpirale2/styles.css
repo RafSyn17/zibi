@@ -149,3 +149,102 @@ body {
     display: none; /* Verstecken des Tooltips */
     font-size: 3em; /* Setzt die Schriftgröße auf das Doppelte der Standardgröße */
   }
+
+  /* Styling für den Settings-Button */
+#settingsButtonContainer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+}
+
+.settingsButton {
+    pointer-events: auto;
+    background-color: #3498db;
+    color: #ffffff;
+    font-size: clamp(1.5rem, 3vw, 3rem);
+    padding: clamp(1rem, 2vw, 2rem) clamp(2rem, 4vw, 4rem);
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.settingsButton:hover {
+    background-color: #2980b9;
+    cursor: pointer;
+}
+
+/* Styling für das Settings-Popup */
+.settingsPopup {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    font-size: 1.5rem; /* Vergrößert die Schriftgröße im gesamten Popup */
+    line-height: 2; /* Erhöht den Zeilenabstand im gesamten Popup */
+}
+
+.settingsContent {
+    background-color: #f9f9f9;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 2rem; /* Vergrößert das Schließen (x) Symbol */
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.settingsButton {
+    pointer-events: auto;
+    background-color: #3498db;
+    color: #ffffff;
+    font-size: clamp(1.5rem, 3vw, 3rem);
+    padding: clamp(1rem, 2vw, 2rem) clamp(2rem, 4vw, 4rem);
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+@media (min-width: 1024px) {
+    .settingsButton {
+        font-size: 2rem;
+        padding: 1.5rem 3rem;
+    }
+}
+
+.settingsButton:hover {
+    background-color: #2980b9;
+    cursor: pointer;
+}
+
+/* Button zum Speichern der Einstellungen */
+#saveSettings {
+    font-size: 1.5rem; /* Vergrößern der Schriftgröße */
+    padding: 1rem 2rem; /* Festgelegter Abstand */
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#saveSettings:hover {
+    background-color: #2980b9;
+}
