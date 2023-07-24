@@ -21,15 +21,16 @@ let ctx;
 let tooltip;
 let timer;
 let sieve = new SegmentedSieve();
-let useEraSieve = true;
-let storePrimeSimpleResults = true;
+let useEraSieve = false;
+let doStoreSimpleResults = true;
 let storedSimpleResults = {};
 
 function isPrimeSimpleStore(x) {
     if (storedSimpleResults.hasOwnProperty(x))
         return storedSimpleResults[x];
     let result = isPrimeSimple(x);
-    storedSimpleResults[x] = result;
+    if (doStoreSimpleResults)
+        storedSimpleResults[x] = result;
     return result;
 }
 
