@@ -9,7 +9,8 @@ body {
     width: 100%;
 }
 
-#canvas {
+#canvas,
+#buttonContainer {
     position: fixed;
     top: 0;
     left: 0;
@@ -18,39 +19,25 @@ body {
 }
 
 #buttonContainer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
     pointer-events: none;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.arrowButton {
+.arrowButton,
+.centerButton,
+.zoomButton,
+.settingsButton {
     pointer-events: auto;
     background-color: #3498db;
     color: #ffffff;
     font-size: clamp(1.5rem, 3vw, 3rem);
-    /* Erhöhte Skalierung von Schriftgrad zwischen 1.5rem und 3rem, basierend auf der Viewport-Breite */
     padding: clamp(1rem, 2vw, 2rem) clamp(2rem, 4vw, 4rem);
-    /* Erhöhter Abstand skaliert zwischen 1rem und 2rem vertikal und zwischen 2rem und 4rem horizontal, basierend auf der Viewport-Breite */
     border: none;
     border-radius: 5px;
+    text-align: center;
 }
-
-/* Anwendung spezieller Stile, wenn der Viewport größer als 1024px ist */
-@media (min-width: 1024px) {
-    .arrowButton {
-        font-size: 2rem;
-        /* Festgelegte Schriftgröße für größere Bildschirme */
-        padding: 1.5rem 3rem;
-        /* Festgelegter Abstand für größere Bildschirme */
-    }
-}
-
 
 .arrowButton:not(:last-child) {
     margin-bottom: 10px;
@@ -72,71 +59,30 @@ body {
     margin-left: auto;
 }
 
-/* Stiländerungen für :hover-Pseudoklasse */
-.arrowButton:hover {
-    background-color: #2980b9;
-    cursor: pointer;
-}
-
-#centerButtonContainer {
+#centerButtonContainer,
+#zoomButtonContainer,
+#settingsButtonContainer {
     position: fixed;
-    top: 0;
-    left: 0;
     padding: 10px;
 }
 
-.centerButton {
-    pointer-events: auto;
-    background-color: #3498db;
-    color: #ffffff;
-    font-size: clamp(1.5rem, 3vw, 3rem);
-    padding: clamp(1rem, 2vw, 2rem) clamp(2rem, 4vw, 4rem);
-    border: none;
-    border-radius: 5px;
-    text-align: center;
-}
-
-@media (min-width: 1024px) {
-    .centerButton {
-        font-size: 2rem;
-        padding: 1.5rem 3rem;
-    }
-}
-
-.centerButton:hover {
-    background-color: #2980b9;
-    cursor: pointer;
-}
-
 #zoomButtonContainer {
-    position: fixed;
     top: 0;
     right: 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 10px;
 }
 
-.zoomButton {
-    pointer-events: auto;
-    background-color: #3498db;
-    color: #ffffff;
-    font-size: clamp(1.5rem, 3vw, 3rem);
-    padding: clamp(1rem, 2vw, 2rem) clamp(2rem, 4vw, 4rem);
-    border: none;
-    border-radius: 5px;
-    text-align: center;
+#settingsButtonContainer {
+    bottom: 0;
+    left: 0;
 }
 
-@media (min-width: 1024px) {
-    .zoomButton {
-        font-size: 2rem;
-        padding: 1.5rem 3rem;
-    }
-}
-
-.zoomButton:hover {
+.arrowButton:hover,
+.centerButton:hover,
+.zoomButton:hover,
+.settingsButton:hover {
     background-color: #2980b9;
     cursor: pointer;
 }
@@ -148,33 +94,8 @@ body {
     padding: 10px;
     display: none; /* Verstecken des Tooltips */
     font-size: 3em; /* Setzt die Schriftgröße auf das Doppelte der Standardgröße */
-  }
-
-  /* Styling für den Settings-Button */
-#settingsButtonContainer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    padding: 10px;
 }
 
-.settingsButton {
-    pointer-events: auto;
-    background-color: #3498db;
-    color: #ffffff;
-    font-size: clamp(1.5rem, 3vw, 3rem);
-    padding: clamp(1rem, 2vw, 2rem) clamp(2rem, 4vw, 4rem);
-    border: none;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.settingsButton:hover {
-    background-color: #2980b9;
-    cursor: pointer;
-}
-
-/* Styling für das Settings-Popup */
 .settingsPopup {
     display: none;
     position: fixed;
@@ -211,30 +132,6 @@ body {
     cursor: pointer;
 }
 
-.settingsButton {
-    pointer-events: auto;
-    background-color: #3498db;
-    color: #ffffff;
-    font-size: clamp(1.5rem, 3vw, 3rem);
-    padding: clamp(1rem, 2vw, 2rem) clamp(2rem, 4vw, 4rem);
-    border: none;
-    border-radius: 5px;
-    text-align: center;
-}
-
-@media (min-width: 1024px) {
-    .settingsButton {
-        font-size: 2rem;
-        padding: 1.5rem 3rem;
-    }
-}
-
-.settingsButton:hover {
-    background-color: #2980b9;
-    cursor: pointer;
-}
-
-/* Button zum Speichern der Einstellungen */
 #saveSettings {
     font-size: 1.5rem; /* Vergrößern der Schriftgröße */
     padding: 1rem 2rem; /* Festgelegter Abstand */
@@ -247,4 +144,14 @@ body {
 
 #saveSettings:hover {
     background-color: #2980b9;
+}
+
+@media (min-width: 1024px) {
+    .arrowButton,
+    .centerButton,
+    .zoomButton,
+    .settingsButton {
+        font-size: 2rem;
+        padding: 1.5rem 3rem;
+    }
 }
