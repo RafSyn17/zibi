@@ -24,6 +24,8 @@ let sieve = new SegmentedSieve();
 let useEraSieve = false;
 let doStoreSimpleResults = true;
 let storedSimpleResults = {};
+let markedNumbers = new Set();
+
 
 function isPrimeSimpleStore(x) {
     if (storedSimpleResults.hasOwnProperty(x))
@@ -72,8 +74,13 @@ function drawCanvas() {
         let zahl = getUlamNumber(x + xOff, -(y + yOff));
         if (zahl == 1)
             ctx.fillStyle = 'red';
-        else if (isPrimeSimple(zahl))
-            ctx.fillStyle = 'black';
+        else if (isPrimeSimple(zahl)) {
+            if (markedNumbers.has(zahl))
+                ctx.fillStyle = 'blue';
+            else
+                ctx.fillStyle = 'black';
+
+        }
         else
             return;
         ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
@@ -133,6 +140,11 @@ function getTooltipData(x, y) {
     const zahl = getUlamNumber(xA + xOff, -(yA + yOff));
     const zahlStr = zahl.toLocaleString();
     const isPrime = isPrimeSimple(zahl);
+    if (isPrime)
+        if (markedNumbers.has(zahl))
+            markedNumbers.delete(zahl);
+        else
+            markedNumbers.add(zahl);
     let txt;
     if (isPrime)
         txt = `${zahlStr} ist eine Primzahl`;
