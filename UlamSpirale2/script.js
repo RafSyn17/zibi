@@ -79,7 +79,7 @@ function paintPixel(x, y) {
 
     }
     else
-    ctx.fillStyle = 'white';
+     return; //ctx.fillStyle = 'white';
     ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
 }
 
@@ -102,7 +102,7 @@ function drawCanvasStep(x, y) {
 }
 
 function drawCanvas() {
-    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     clearTimeout(drawCanvasStepTimeout);
     drawCanvasStep(0, 0);
 }
