@@ -188,35 +188,39 @@ function getTooltipData(x, y) {
     xA = Math.floor(x / pixelSize);
     yA = Math.floor(y / pixelSize);
     const zahl = getUlamNumber(xA + xOff, -(yA + yOff));
-    const zahlStr = zahl.toLocaleString();
     const isPrime = isPrimeSimple(zahl);
-    if (isPrime)
-        if (markedNumbers.has(zahl))
-            markedNumbers.delete(zahl);
-        else
-            markedNumbers.add(zahl);
-    let txt;
-    if (isPrime)
-        txt = `${zahlStr} ist eine Primzahl`;
-    else
-        txt = `${zahlStr} ist keine Primzahl`;
-    return [txt, isPrime];
+    return [zahl, isPrime];
 }
 
-function changeColor(x, y) {
-    // Pixelwert des angeklickten Punkts abrufen
+function toggleMark(zahl, x, y) {
+    if (markedNumbers.has(zahl)) {
+            markedNumbers.delete(zahl);
+        ctx.fillStyle = 'black';
+    }
+    else {
+            markedNumbers.add(zahl);
+        ctx.fillStyle = 'blue';
+}
     let xX = x - x % pixelSize;
     let yY = y - y % pixelSize;
-    const imageData = ctx.getImageData(xX, yY, 1, 1);
-    const pixelColor = `srgb(${imageData.data[0]}, ${imageData.data[1]}, ${imageData.data[2]})`;
-
-    if (pixelColor === 'srgb(0, 0, 0)' && imageData.data[3] == '255')
-        // wenn schwarz dann blau
-        ctx.fillStyle = 'blue';
-    else
-        // wenn blau , dann schwarz
-        ctx.fillStyle = 'black';
     ctx.fillRect(xX, yY, pixelSize, pixelSize); // Ein einzelnes Pixel malen
+}
+
+function makeToolTip(zahl, x, y) {
+    tooltip.style.left = `${x}px`;
+    tooltip.style.top = `${y}px`;
+    tooltip.style.display = 'block';
+
+    tooltip.textContent = `${zahl}`;
+
+    if (timer) {
+        clearTimeout(timer); // Löscht den vorherigen Timeout
+    }
+
+    timer = setTimeout(() => {
+        tooltip.style.display = 'none';
+    }, 2000); // Versteckt den Tooltip nach 2 Sekunden
+
 }
 
 window.onload = function () {
@@ -259,23 +263,12 @@ window.onload = function () {
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
 
-        const [result, isPrime] = getTooltipData(x, y);
-
-        tooltip.style.left = `${event.pageX + pixelSize}px`;
-        tooltip.style.top = `${event.pageY + pixelSize}px`;
-        tooltip.style.display = 'block';
-        tooltip.textContent = result;
+        const [zahl, isPrime] = getTooltipData(x, y);
 
         if (isPrime)
-            changeColor(x, y);
+            toggleMark(zahl, x, y);
 
-        if (timer) {
-            clearTimeout(timer); // Löscht den vorherigen Timeout
-        }
-
-        timer = setTimeout(() => {
-            tooltip.style.display = 'none';
-        }, 2000); // Versteckt den Tooltip nach 2 Sekunden
+        makeToolTip(zahl, event.pageX + pixelSize, event.pageY + pixelSize);
     });
 
     // Holen Sie sich das Popup
