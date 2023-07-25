@@ -23,16 +23,16 @@ let timer;
 let sieve = new SegmentedSieve();
 let useEraSieve = false;
 let doStoreSimpleResults = true;
-let storedSimpleResults = {};
+let storedSimpleResults = new Map();
 let markedNumbers = new Set();
 
 
-function isPrimeSimpleStore(x) {
-    if (storedSimpleResults.hasOwnProperty(x))
-        return storedSimpleResults[x];
-    let result = isPrimeSimple(x);
+function isPrimeSimpleStore(zahl) {
+    if (storedSimpleResults.has(zahl))
+        return storedSimpleResults.get(zahl);
+    let result = isPrimeSimple(zahl);
     if (doStoreSimpleResults)
-        storedSimpleResults[x] = result;
+        storedSimpleResults.set(zahl, result);
     return result;
 }
 
@@ -71,7 +71,7 @@ function paintPixel(x, y) {
     let zahl = getUlamNumber(x + xOff, -(y + yOff));
     if (zahl == 1)
         ctx.fillStyle = 'red';
-    else if (isPrimeSimple(zahl)) {
+    else if (isPrime(zahl)) {
         if (markedNumbers.has(zahl))
             ctx.fillStyle = 'blue';
         else
