@@ -66,32 +66,45 @@ function addYOff(y) {
     setYOff(yOff + y);
 }
 
-function drawCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Funktion zum Färben der Pixel
-    function paintPixel(x, y) {
-        let zahl = getUlamNumber(x + xOff, -(y + yOff));
-        if (zahl == 1)
-            ctx.fillStyle = 'red';
-        else if (isPrimeSimple(zahl)) {
-            if (markedNumbers.has(zahl))
-                ctx.fillStyle = 'blue';
-            else
-                ctx.fillStyle = 'black';
-
-        }
+// Funktion zum Färben der Pixel
+function paintPixel(x, y) {
+    let zahl = getUlamNumber(x + xOff, -(y + yOff));
+    if (zahl == 1)
+        ctx.fillStyle = 'red';
+    else if (isPrimeSimple(zahl)) {
+        if (markedNumbers.has(zahl))
+            ctx.fillStyle = 'blue';
         else
-            return;
-        ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
-    }
+            ctx.fillStyle = 'black';
 
-    // Pixel durchlaufen und bemalen
-    for (let y = 0; y < canvas.height / pixelSize; y++) {
-        for (let x = 0; x < canvas.width / pixelSize; x++) {
-            paintPixel(x, y);
-        }
     }
+    else
+    ctx.fillStyle = 'white';
+    ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
+}
+
+const fps = 60;
+let canvasStepStart
+let drawCanvasStepTimeout
+function drawCanvasStep(x, y) {
+    canvasStepStart = new Date();
+    do {
+        if (y >= canvas.height / pixelSize)
+            return;
+        if (x >= canvas.width / pixelSize) {
+            x = 0;
+            y++;
+        }
+        paintPixel(x, y);
+        ++x;
+    } while ((new Date() - canvasStepStart) < 1000 / fps)
+    drawCanvasStepTimeout = setTimeout(function () { drawCanvasStep(x, y); }, 0)
+}
+
+function drawCanvas() {
+    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+    clearTimeout(drawCanvasStepTimeout);
+    drawCanvasStep(0, 0);
 }
 
 function resizeCanvas() {
