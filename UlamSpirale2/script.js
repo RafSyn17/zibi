@@ -79,32 +79,44 @@ function paintPixel(x, y) {
 
     }
     else
-     return; //ctx.fillStyle = 'white';
+        return; //ctx.fillStyle = 'white';
     ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
 }
 
 const fps = 60;
-let canvasStepStart
-let drawCanvasStepTimeout
-function drawCanvasStep(x, y) {
+let canvasStepStart;
+let drawCanvasStepTimeout;
+
+function drawCanvasStep(x, y, xMin, xMax, yMax) {
     canvasStepStart = new Date();
     do {
-        if (y >= canvas.height / pixelSize)
+        if (y >= yMax)
             return;
-        if (x >= canvas.width / pixelSize) {
-            x = 0;
+        if (x >= xMax) {
+            x = xMin;
             y++;
         }
         paintPixel(x, y);
         ++x;
     } while ((new Date() - canvasStepStart) < 1000 / fps)
-    drawCanvasStepTimeout = setTimeout(function () { drawCanvasStep(x, y); }, 0)
+    drawCanvasStepTimeout = setTimeout(function () { 
+        drawCanvasStepTimeout = null;   
+        drawCanvasStep(x, y, xMin, xMax, yMax); 
+    }, 0)
 }
 
-function drawCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    clearTimeout(drawCanvasStepTimeout);
-    drawCanvasStep(0, 0);
+function drawCanvas(xMin, xMax, yMin, yMax) {
+    if (drawCanvasStepTimeout) {
+        clearTimeout(drawCanvasStepTimeout);
+        xMin = xMax = yMin = yMax = undefined;
+    }
+    xMin = xMin ?? 0;
+    xMax = xMax ?? canvas.width / pixelSize;
+    yMin = yMin ?? 0;
+    yMax = yMax ?? canvas.height / pixelSize;
+    if (xMin === 0 && xMax === canvas.width / pixelSize && yMin === 0 && yMax === canvas.height / pixelSize)
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawCanvasStep(xMin, yMin, xMin, xMax, yMax);
 }
 
 function resizeCanvas() {
@@ -118,12 +130,37 @@ function resizeCanvas() {
 }
 
 function adjustOffPct(x, y) {
-    if (x != 0)
-        addXOff(canvas.width * (x / 100) / pixelSize);
-    if (y != 0)
-        addYOff(canvas.height * (y / 100) / pixelSize);
-    drawCanvas();
+    const xDiff = Math.round(canvas.width * (x / 100) / pixelSize);
+    const yDiff = Math.round(canvas.height * (y / 100) / pixelSize);
+    if (xDiff === 0 && yDiff === 0)
+        return;
+    addXOff(xDiff);
+    addYOff(yDiff);
+    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
+    // Löschen Sie den aktuellen Inhalt
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Zeichnen Sie das ImageData-Objekt an der neuen Position
+    ctx.putImageData(imageData, -xDiff * pixelSize, -yDiff * pixelSize);
+    let xMin, xMax, yMin, yMax;
+    if (xDiff > 0) {
+        xMax = Math.round(canvas.width / pixelSize);
+        xMin = xMax - xDiff;
+    }
+    if (xDiff < 0) {
+        xMin = 0;
+        xMax = -xDiff;
+    }
+    if (yDiff > 0) {
+        yMax = Math.round(canvas.height / pixelSize);
+        yMin = yMax - yDiff;
+    }
+    if (yDiff < 0) {
+        yMin = 0;
+        yMax = -yDiff;
+    }
+    drawCanvas(xMin, xMax, yMin, yMax);
 }
 
 function goToCenter() {
