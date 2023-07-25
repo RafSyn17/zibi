@@ -126,15 +126,35 @@ function zoomOut() {
     resizeCanvas();
 }
 
+
 function getTooltipData(x, y) {
     xA = Math.floor(x / pixelSize);
     yA = Math.floor(y / pixelSize);
     const zahl = getUlamNumber(xA + xOff, -(yA + yOff));
     const zahlStr = zahl.toLocaleString();
-    if (isPrimeSimple(zahl))
-        return `${zahlStr} ist eine Primzahl`;
+    const isPrime = isPrimeSimple(zahl);
+    let txt;
+    if (isPrime)
+        txt = `${zahlStr} ist eine Primzahl`;
     else
-        return `${zahlStr} ist keine Primzahl`;
+        txt = `${zahlStr} ist keine Primzahl`;
+    return [txt, isPrime];
+}
+
+function changeColor(x, y) {
+    // Pixelwert des angeklickten Punkts abrufen
+    let xX = x - x % pixelSize;
+    let yY = y - y % pixelSize;
+    const imageData = ctx.getImageData(xX, yY, 1, 1);
+    const pixelColor = `srgb(${imageData.data[0]}, ${imageData.data[1]}, ${imageData.data[2]})`;
+
+    if (pixelColor === 'srgb(0, 0, 0)' && imageData.data[3] == '255')
+        // wenn schwarz dann blau
+        ctx.fillStyle = 'blue';
+    else
+        // wenn blau , dann schwarz
+        ctx.fillStyle = 'black';
+    ctx.fillRect(xX, yY, pixelSize, pixelSize); // Ein einzelnes Pixel malen
 }
 
 window.onload = function () {
@@ -177,12 +197,15 @@ window.onload = function () {
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
 
-        const result = getTooltipData(x, y);
+        const [result, isPrime] = getTooltipData(x, y);
 
-        tooltip.style.left = `${event.pageX}px`;
-        tooltip.style.top = `${event.pageY}px`;
+        tooltip.style.left = `${event.pageX + pixelSize}px`;
+        tooltip.style.top = `${event.pageY + pixelSize}px`;
         tooltip.style.display = 'block';
         tooltip.textContent = result;
+
+        if (isPrime)
+            changeColor(x, y);
 
         if (timer) {
             clearTimeout(timer); // Löscht den vorherigen Timeout
