@@ -106,6 +106,7 @@ function drawCanvasStep(x, y, xMin, xMax, yMax) {
 }
 
 function drawCanvas(xMin, xMax, yMin, yMax) {
+    tooltip.style.display = 'none';
     if (drawCanvasStepTimeout) {
         clearTimeout(drawCanvasStepTimeout);
         xMin = xMax = yMin = yMax = undefined;
@@ -213,13 +214,13 @@ function makeToolTip(zahl, x, y) {
 
     tooltip.textContent = `${zahl}`;
 
-    if (timer) {
-        clearTimeout(timer); // Löscht den vorherigen Timeout
-    }
+    // if (timer) {
+    //     clearTimeout(timer); // Löscht den vorherigen Timeout
+    // }
 
-    timer = setTimeout(() => {
-        tooltip.style.display = 'none';
-    }, 2000); // Versteckt den Tooltip nach 2 Sekunden
+    // timer = setTimeout(() => {
+    //     tooltip.style.display = 'none';
+    // }, 2000); // Versteckt den Tooltip nach 2 Sekunden
 
 }
 
@@ -269,6 +270,11 @@ window.onload = function () {
             toggleMark(zahl, x, y);
 
         makeToolTip(zahl, event.pageX + pixelSize, event.pageY + pixelSize);
+    });
+
+    // Schließen-Symbol hinzufügen und Event-Listener
+    document.getElementById('tooltip').addEventListener('click', function () {
+        tooltip.style.display = 'none';
     });
 
     // Holen Sie sich das Popup
