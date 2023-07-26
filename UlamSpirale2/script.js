@@ -66,21 +66,61 @@ function addYOff(y) {
     setYOff(yOff + y);
 }
 
+function drawRectangle(imageData, r, g, b, a, x, y, w, h) {
+    // Grenzen des Rechtecks anpassen, um sicherzustellen, dass sie innerhalb des ImageData liegen
+    const xStart = Math.max(0, x);
+    const yStart = Math.max(0, y);
+    const xEnd = Math.min(x + w, imageData.width);
+    const yEnd = Math.min(y + h, imageData.height);
+
+    for (let i = yStart; i < yEnd; i++) {
+        for (let j = xStart; j < xEnd; j++) {
+            const index = (i * imageData.width + j) * 4;
+
+            imageData.data[index] = r;
+            imageData.data[index + 1] = g;
+            imageData.data[index + 2] = b;
+            imageData.data[index + 3] = a;
+        }
+    }
+}
+
+let imageData;
+
 // Funktion zum Färben der Pixel
 function paintPixel(x, y) {
     let zahl = getUlamNumber(x + xOff, -(y + yOff));
-    if (zahl == 1)
-        ctx.fillStyle = 'red';
+    let r, g, b, a; // red, green, blue, alpha
+    if (Math.abs(x+xOff) == Math.abs(y+yOff)) {
+        // ctx.fillStyle = 'red';
+        r = 255;
+        g = 0;
+        b = 0;
+        a = 255;
+    }
     else if (isPrime(zahl)) {
-        if (markedNumbers.has(zahl))
-            ctx.fillStyle = 'blue';
-        else
-            ctx.fillStyle = 'black';
+        if (markedNumbers.has(zahl)) {
+            // ctx.fillStyle = 'blue';
+            r = 0;
+            g = 0;
+            b = 255;
+            a = 255;
 
+        }
+        else {
+            // ctx.fillStyle = 'black';
+            r = 0;
+            g = 0;
+            b = 0;
+            a = 255;
+        }
     }
     else
         return; //ctx.fillStyle = 'white';
-    ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
+
+    drawRectangle(imageData, r, g, b, a, x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+
+    // ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
 }
 
 const fps = 60;
@@ -90,18 +130,21 @@ let drawCanvasStepTimeout;
 function drawCanvasStep(x, y, xMin, xMax, yMax) {
     canvasStepStart = new Date();
     do {
-        if (y >= yMax)
+        if (y >= yMax) {
+            ctx.putImageData(imageData, 0, 0);
             return;
+        }
         if (x >= xMax) {
             x = xMin;
             y++;
         }
         paintPixel(x, y);
         ++x;
-    } while ((new Date() - canvasStepStart) < 1000 / fps)
-    drawCanvasStepTimeout = setTimeout(function () { 
-        drawCanvasStepTimeout = null;   
-        drawCanvasStep(x, y, xMin, xMax, yMax); 
+    } while ((new Date() - canvasStepStart) < 1000 / fps);
+    ctx.putImageData(imageData, 0, 0);
+    drawCanvasStepTimeout = setTimeout(function () {
+        drawCanvasStepTimeout = null;
+        drawCanvasStep(x, y, xMin, xMax, yMax);
     }, 0)
 }
 
@@ -117,6 +160,7 @@ function drawCanvas(xMin, xMax, yMin, yMax) {
     yMax = yMax ?? canvas.height / pixelSize;
     if (xMin === 0 && xMax === canvas.width / pixelSize && yMin === 0 && yMax === canvas.height / pixelSize)
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     drawCanvasStep(xMin, yMin, xMin, xMax, yMax);
 }
 
@@ -195,13 +239,13 @@ function getTooltipData(x, y) {
 
 function toggleMark(zahl, x, y) {
     if (markedNumbers.has(zahl)) {
-            markedNumbers.delete(zahl);
+        markedNumbers.delete(zahl);
         ctx.fillStyle = 'black';
     }
     else {
-            markedNumbers.add(zahl);
+        markedNumbers.add(zahl);
         ctx.fillStyle = 'blue';
-}
+    }
     let xX = x - x % pixelSize;
     let yY = y - y % pixelSize;
     ctx.fillRect(xX, yY, pixelSize, pixelSize); // Ein einzelnes Pixel malen
