@@ -1,54 +1,10 @@
-// let sieve = new SegmentedSieve();
-
-// sieve.generatePrimesUpTo(30);
-// console.log(sieve.isPrime(29)); // true
-// console.log(sieve.isPrime(20)); // false
-
-// console.log( measureExecutionTime(sieve, 'generatePrimesUpTo', 100000));
-// console.log( measureExecutionTime(sieve, 'generatePrimesUpTo', 100000));
-
-// console.log( measureExecutionTime(sieve, 'generatePrimesUpTo', 1000000));
-// console.log( measureExecutionTime(sieve, 'generatePrimesUpTo', 1000000));
-
-// console.log( measureExecutionTime(sieve, 'generatePrimesUpTo', 10000000));
-// console.log( measureExecutionTime(sieve, 'generatePrimesUpTo', 10000000));
-
 let pixelSize = 4;
 let xOff = 0;
 let yOff = 0;
 let canvas;
 let ctx;
 let tooltip;
-let timer;
-let sieve = new SegmentedSieve();
-let useEraSieve = false;
-let doStoreSimpleResults = true;
-let storedSimpleResults = new Map();
 let markedNumbers = new Set();
-
-
-function isPrimeSimpleStore(zahl) {
-    if (storedSimpleResults.has(zahl))
-        return storedSimpleResults.get(zahl);
-    let result = isPrimeSimple(zahl);
-    if (doStoreSimpleResults)
-        storedSimpleResults.set(zahl, result);
-    return result;
-}
-
-function isPrimeSieve(x) {
-    const step = 1000000;
-    const gen = Math.ceil(x / step) * step;
-    sieve.generatePrimesUpTo(gen);
-    return sieve.isPrime(x);
-}
-
-function isPrime(x) {
-    if (useEraSieve)
-        return isPrimeSieve(x);
-    else
-        return isPrimeSimpleStore(x);
-}
 
 function setXOff(x) {
     xOff = Math.round(x);
@@ -66,24 +22,6 @@ function addYOff(y) {
     setYOff(yOff + y);
 }
 
-function drawRectangle(imageData, r, g, b, a, x, y, w, h) {
-    // Grenzen des Rechtecks anpassen, um sicherzustellen, dass sie innerhalb des ImageData liegen
-    const xStart = Math.max(0, x);
-    const yStart = Math.max(0, y);
-    const xEnd = Math.min(x + w, imageData.width);
-    const yEnd = Math.min(y + h, imageData.height);
-
-    for (let i = yStart; i < yEnd; i++) {
-        for (let j = xStart; j < xEnd; j++) {
-            const index = (i * imageData.width + j) * 4;
-
-            imageData.data[index] = r;
-            imageData.data[index + 1] = g;
-            imageData.data[index + 2] = b;
-            imageData.data[index + 3] = a;
-        }
-    }
-}
 
 let imageData;
 
@@ -123,6 +61,7 @@ function paintPixel(x, y) {
         a = 255;
     }
     else {
+        // white
         r = 255;
         g = 255;
         b = 255;
@@ -131,7 +70,6 @@ function paintPixel(x, y) {
     }
 
     drawRectangle(imageData, r, g, b, a, x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-
     // ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
 }
 
@@ -272,26 +210,18 @@ function makeToolTip(zahl, x, y) {
     tooltip.style.display = 'block';
 
     tooltip.textContent = `${zahl}`;
-
-    // if (timer) {
-    //     clearTimeout(timer); // Löscht den vorherigen Timeout
-    // }
-
-    // timer = setTimeout(() => {
-    //     tooltip.style.display = 'none';
-    // }, 2000); // Versteckt den Tooltip nach 2 Sekunden
-
 }
 
-window.onload = function () {
+function init() {
     canvas = document.getElementById('canvas');
     tooltip = document.getElementById('tooltip');
     ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     goToCenter();
-    window.addEventListener('resize', resizeCanvas);
+}
 
+function addButtonListeners() {
     document.getElementById("centerButton").addEventListener("click", goToCenter);
 
     document.getElementById("zoomInButton").addEventListener("click", zoomIn);
@@ -317,6 +247,13 @@ window.onload = function () {
     document.getElementById("downButton").
         addEventListener("click",
             function () { adjustOffPct(0, 20); });
+}
+
+window.onload = function () {
+    init();
+    window.addEventListener('resize', resizeCanvas);
+
+    addButtonListeners();
 
     canvas.addEventListener('click', function (event) {
         const rect = canvas.getBoundingClientRect();
@@ -339,19 +276,13 @@ window.onload = function () {
     // Holen Sie sich das Popup
     var settingsPopup = document.getElementById("settingsPopup");
 
-    // Holen Sie sich den Button, der das Popup öffnet
-    var settingsButton = document.getElementById("settingsButton");
-
-    // Holen Sie sich das <span>-Element, das das Popup schließt
-    var close = document.getElementsByClassName("close")[0];
-
     // Wenn der Benutzer auf den Button klickt, öffnen Sie das Popup
-    settingsButton.onclick = function () {
+    document.getElementById("settingsButton").onclick = function () {
         settingsPopup.style.display = "block";
     }
 
     // Wenn der Benutzer auf <span> (x) klickt, schließen Sie das Popup
-    close.onclick = function () {
+    document.getElementsByClassName("close")[0].onclick = function () {
         settingsPopup.style.display = "none";
     }
 

@@ -43,3 +43,32 @@ function isPrimeSimple(num) {
         if (num % i === 0) return false;
     return true;
 }
+
+let sieve = new SegmentedSieve();
+let useEraSieve = false;
+let doStoreSimpleResults = true;
+let storedSimpleResults = new Map();
+
+
+function isPrimeSimpleStore(zahl) {
+    if (storedSimpleResults.has(zahl))
+        return storedSimpleResults.get(zahl);
+    let result = isPrimeSimple(zahl);
+    if (doStoreSimpleResults)
+        storedSimpleResults.set(zahl, result);
+    return result;
+}
+
+function isPrimeSieve(x) {
+    const step = 1000000;
+    const gen = Math.ceil(x / step) * step;
+    sieve.generatePrimesUpTo(gen);
+    return sieve.isPrime(x);
+}
+
+function isPrime(x) {
+    if (useEraSieve)
+        return isPrimeSieve(x);
+    else
+        return isPrimeSimpleStore(x);
+}
