@@ -91,14 +91,7 @@ let imageData;
 function paintPixel(x, y) {
     let zahl = getUlamNumber(x + xOff, -(y + yOff));
     let r, g, b, a; // red, green, blue, alpha
-    if (Math.abs(x+xOff) == Math.abs(y+yOff)) {
-        // ctx.fillStyle = 'red';
-        r = 255;
-        g = 0;
-        b = 0;
-        a = 255;
-    }
-    else if (isPrime(zahl)) {
+    if (isPrime(zahl)) {
         if (markedNumbers.has(zahl)) {
             // ctx.fillStyle = 'blue';
             r = 0;
@@ -107,6 +100,13 @@ function paintPixel(x, y) {
             a = 255;
 
         }
+        else if (Math.abs(x + xOff) == Math.abs(y + yOff)) {
+            // ctx.fillStyle = 'red';
+            r = 255;
+            g = 0;
+            b = 0;
+            a = 255;
+        }
         else {
             // ctx.fillStyle = 'black';
             r = 0;
@@ -114,6 +114,13 @@ function paintPixel(x, y) {
             b = 0;
             a = 255;
         }
+    }
+    else if (Math.abs(x + xOff) == Math.abs(y + yOff)) {
+        // ctx.fillStyle = 'red';
+        r = 255;
+        g = 255;
+        b = 0;
+        a = 255;
     }
     else
         return; //ctx.fillStyle = 'white';
@@ -240,7 +247,10 @@ function getTooltipData(x, y) {
 function toggleMark(zahl, x, y) {
     if (markedNumbers.has(zahl)) {
         markedNumbers.delete(zahl);
-        ctx.fillStyle = 'black';
+        if (Math.abs( Math.floor(x/pixelSize) + xOff) == Math.abs(Math.floor(y/pixelSize) + yOff))
+            ctx.fillStyle = 'red';
+        else
+            ctx.fillStyle = 'black';
     }
     else {
         markedNumbers.add(zahl);
