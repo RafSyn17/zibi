@@ -166,15 +166,15 @@ function goToCenter() {
 
 function zoomIn() {
     pixelSize = Math.round(pixelSize * 2);
-    setXOff(xOff / 2);
-    setYOff(yOff / 2);
+    setXOff(xOff + (canvas.width / pixelSize) / 2);
+    setYOff(yOff + (canvas.height / pixelSize) / 2);
     resizeCanvas();
 }
 
 function zoomOut() {
     pixelSize = Math.round(pixelSize / 2);
-    setXOff(xOff * 2);
-    setYOff(yOff * 2);
+    setXOff(xOff - (canvas.width / pixelSize) / 4);
+    setYOff(yOff - (canvas.height / pixelSize) / 4);
     resizeCanvas();
 }
 
