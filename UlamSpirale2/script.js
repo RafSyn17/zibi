@@ -140,7 +140,7 @@ function adjustOffPct(x, y) {
     ctx.putImageData(imageData, -xDiff * pixelSize, -yDiff * pixelSize);
     let xMin, xMax, yMin, yMax;
     if (xDiff > 0) {
-        xMax = Math.round(canvas.width / pixelSize);
+        xMax = Math.floor(canvas.width / pixelSize);
         xMin = xMax - xDiff;
     }
     if (xDiff < 0) {
@@ -148,7 +148,7 @@ function adjustOffPct(x, y) {
         xMax = -xDiff;
     }
     if (yDiff > 0) {
-        yMax = Math.round(canvas.height / pixelSize);
+        yMax = Math.floor(canvas.height / pixelSize);
         yMin = yMax - yDiff;
     }
     if (yDiff < 0) {
