@@ -122,8 +122,13 @@ function paintPixel(x, y) {
         b = 0;
         a = 255;
     }
-    else
-        return; //ctx.fillStyle = 'white';
+    else {
+        r = 255;
+        g = 255;
+        b = 255;
+        a = 255;
+
+    }
 
     drawRectangle(imageData, r, g, b, a, x * pixelSize, y * pixelSize, pixelSize, pixelSize);
 
@@ -165,8 +170,8 @@ function drawCanvas(xMin, xMax, yMin, yMax) {
     xMax = xMax ?? canvas.width / pixelSize;
     yMin = yMin ?? 0;
     yMax = yMax ?? canvas.height / pixelSize;
-    if (xMin === 0 && xMax === canvas.width / pixelSize && yMin === 0 && yMax === canvas.height / pixelSize)
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // if (xMin === 0 && xMax === canvas.width / pixelSize && yMin === 0 && yMax === canvas.height / pixelSize)
+    //     ctx.clearRect(0, 0, canvas.width, canvas.height);
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     drawCanvasStep(xMin, yMin, xMin, xMax, yMax);
 }
