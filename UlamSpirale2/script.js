@@ -1,6 +1,8 @@
-let pixelSize = 4;
-let xOff = 0;
-let yOff = 0;
+let pixelSize = 1;
+let cxOff = 0;
+let cyOff = 0;
+let xOff = 0; // für Zahlen
+let yOff = 0; // für Zahlen
 let canvas;
 let ctx;
 let tooltip;
@@ -69,8 +71,8 @@ function paintPixel(x, y) {
 
     }
 
-    drawRectangle(imageData, r, g, b, a, x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-    // ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
+    drawRectangle(imageData, r, g, b, a, x * pixelSize + cxOff, y * pixelSize + cyOff, pixelSize, pixelSize);
+    /// ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
 }
 
 const fps = 60;
@@ -111,7 +113,7 @@ function drawCanvas(xMin, xMax, yMin, yMax) {
     // if (xMin === 0 && xMax === canvas.width / pixelSize && yMin === 0 && yMax === canvas.height / pixelSize)
     //     ctx.clearRect(0, 0, canvas.width, canvas.height);
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    drawCanvasStep(xMin, yMin, xMin, xMax, yMax);
+    drawCanvasStep(xMin, yMin, xMin, xMax + 1, yMax + 1); // unschön hier die +1, aber fürs Erste mal... @todo
 }
 
 function resizeCanvas() {
@@ -124,13 +126,21 @@ function resizeCanvas() {
     drawCanvas();
 }
 
-function adjustOffPct(x, y) {
-    const xDiff = Math.round(canvas.width * (x / 100) / pixelSize);
-    const yDiff = Math.round(canvas.height * (y / 100) / pixelSize);
-    if (xDiff === 0 && yDiff === 0)
+function adjustOff(x, y, isPct = true) {
+    if (isPct) {
+        x = canvas.width * x / 100;
+        y = canvas.height * y / 100;
+    }
+    const xDiff = Math.round(x / pixelSize);
+    const yDiff = Math.round(y / pixelSize);
+    const cxDiff = x % pixelSize;
+    const cyDiff = y % pixelSize;
+    if (xDiff === 0 && yDiff === 0 && cxDiff === 0 && cyDiff === 0)
         return;
     addXOff(xDiff);
     addYOff(yDiff);
+    // cxOff = (cxOff + cxDiff) % pixelSize; if( cxOff > 0 ) cxOff -= pixelSize;
+    // cyOff = (cyOff + cxDiff) % pixelSize; if( cyOff > 0 ) cyOff -= pixelSize;
     var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     // Löschen Sie den aktuellen Inhalt
@@ -179,6 +189,10 @@ function zoomOut() {
 }
 
 
+let isDrawing = false;
+let lastX = 0;
+let lastY = 0;
+
 function getTooltipData(x, y) {
     xA = Math.floor(x / pixelSize);
     yA = Math.floor(y / pixelSize);
@@ -190,7 +204,7 @@ function getTooltipData(x, y) {
 function toggleMark(zahl, x, y) {
     if (markedNumbers.has(zahl)) {
         markedNumbers.delete(zahl);
-        if (Math.abs( Math.floor(x/pixelSize) + xOff) == Math.abs(Math.floor(y/pixelSize) + yOff))
+        if (Math.abs(Math.floor(x / pixelSize) + xOff) == Math.abs(Math.floor(y / pixelSize) + yOff))
             ctx.fillStyle = 'red';
         else
             ctx.fillStyle = 'black';
@@ -201,7 +215,7 @@ function toggleMark(zahl, x, y) {
     }
     let xX = x - x % pixelSize;
     let yY = y - y % pixelSize;
-    ctx.fillRect(xX, yY, pixelSize, pixelSize); // Ein einzelnes Pixel malen
+    ctx.fillRect(xX + cxOff, yY + cyOff, pixelSize, pixelSize); // Ein einzelnes Pixel malen
 }
 
 function makeToolTip(zahl, x, y) {
@@ -231,22 +245,22 @@ function addButtonListeners() {
     // Eventlistener für den "upButton"
     document.getElementById("upButton").
         addEventListener("click",
-            function () { adjustOffPct(0, -20); });
+            function () { adjustOff(0, -20); });
 
     // Eventlistener für den "leftButton"
     document.getElementById("leftButton").
         addEventListener("click",
-            function () { adjustOffPct(-20, 0); });
+            function () { adjustOff(-20, 0); });
 
     // Eventlistener für den "rightButton"
     document.getElementById("rightButton").
         addEventListener("click",
-            function () { adjustOffPct(20, 0); });
+            function () { adjustOff(20, 0); });
 
     // Eventlistener für den "downButton"
     document.getElementById("downButton").
         addEventListener("click",
-            function () { adjustOffPct(0, 20); });
+            function () { adjustOff(0, 20); });
 }
 
 window.onload = function () {
@@ -292,5 +306,41 @@ window.onload = function () {
             settingsPopup.style.display = "none";
         }
     }
+
+
+    function drawLine(startX, startY, endX, endY) {
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+    canvas.addEventListener('touchstart', (e) => {
+        isDrawing = true;
+        const { pageX, pageY } = e.touches[0];
+        lastX = pageX - canvas.offsetLeft;
+        lastY = pageY - canvas.offsetTop;
+    });
+
+    canvas.addEventListener('touchmove', (e) => {
+        if (isDrawing) {
+            e.preventDefault();
+            const { pageX, pageY } = e.touches[0];
+            const currentX = pageX - canvas.offsetLeft;
+            const currentY = pageY - canvas.offsetTop;
+            // drawLine(lastX, lastY, currentX, currentY);
+            adjustOff( lastX-currentX, lastY-currentY, false);
+            lastX = currentX;
+            lastY = currentY;
+        }
+    });
+
+    canvas.addEventListener('touchend', () => {
+        isDrawing = false;
+    });
+
 
 }
