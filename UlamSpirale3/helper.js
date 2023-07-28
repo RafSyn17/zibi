@@ -43,6 +43,14 @@ function drawRectangle(imageData, r, g, b, a, x, y, w, h) {
     const xEnd = Math.min(x + w, imageData.width);
     const yEnd = Math.min(y + h, imageData.height);
 
+    // Index Oben Links und Index Unten Rechts
+    const iol = (yStart * imageData.width + xStart) * 4;
+    const iur = ((yEnd - 1) * imageData.width + (xEnd - 1)) * 4;
+    let id = imageData.data;
+    if (id[iol] === r && id[iol + 1] === g && id[iol + 2] === b && id[iol + 3] === a &&
+        id[iur] === r && id[iur + 1] === g && id[iur + 2] === b && id[iur + 3] === a)
+        return;
+
     for (let i = yStart; i < yEnd; i++) {
         for (let j = xStart; j < xEnd; j++) {
             const index = (i * imageData.width + j) * 4;
@@ -60,4 +68,25 @@ function isPrimeSimple(num) {
     for (let i = 2; i <= Math.sqrt(num); i++)
         if (num % i === 0) return false;
     return true;
+}
+
+function paintPixel(imageData, x, y, xOff, yOff) {
+    let r, g, b, a;
+    let number = getUlamNumber((x + xOff) / pixelSize, -(y + yOff) / pixelSize);
+    let isPrime = isPrimeSimple(number);
+    if (number == 1) {
+        // ctx.fillStyle = "red";
+        r = 255; g = 0; b = 0; a = 255;
+    }
+    else if (isPrime) {
+
+        // ctx.fillStyle = "black";
+        r = 0; g = 0; b = 0; a = 255;
+    }
+    else {
+        // ctx.fillStyle = "white";
+        r = 255; g = 255; b = 255; a = 255;
+    }
+    drawRectangle(imageData, r, g, b, a, x, y, pixelSize, pixelSize);
+    // ctx.fillRect(x, y, pixelSize, pixelSize);
 }

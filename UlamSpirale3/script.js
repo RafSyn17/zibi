@@ -1,42 +1,52 @@
 let canvas;
 let ctx;
+let xOffReal;
+let yOffReal;
 let xOff;
 let yOff;
 let pixelSize = 100;
 
-function xOf() { return Math.floor(xOff); }
-function yOf() { return Math.floor(yOff); }
+function adjustOffsets() {
+    const xB4 = xOff;
+    const yB4 = yOff;
+    xOff = Math.round(xOffReal);
+    yOff = Math.round(yOffReal);
+    if (xOff == xB4 && yOff == yB4)
+        return false;
+    return true;
+}
 
 function getTopLeftXY() {
-    return [-posModulo(xOf(), pixelSize), -posModulo(yOf(), pixelSize)];
+    return [-posModulo(xOff, pixelSize), -posModulo(yOff, pixelSize)];
+}
+
+
+let drawTimer;
+const fps = 60;
+
+function drawResponsive(imageData, x, y, xMin, xMax, yMax) {
+    frameStart = new Date();
+    do {
+        if (y >= yMax) {
+            ctx.putImageData(imageData, 0, 0);
+            return;
+        }
+        if (x >= xMax) {
+            x = xMin;
+            y += pixelSize;
+        }
+        paintPixel(imageData, x, y, xOff, yOff);
+        x += pixelSize;
+    } while ((new Date() - frameStart) < 1000 / fps);
+    ctx.putImageData(imageData, 0, 0);
+    drawTimer = setTimeout(function () { drawResponsive(imageData, x, y, xMin, xMax, yMax) }, 1000 / fps);
 }
 
 function drawUlam() {
+    clearTimeout(drawTimer);
     const [xStart, yStart] = getTopLeftXY();
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    let r, g, b, a;
-    for (let y = yStart; y < canvas.height; y += pixelSize) {
-        for (let x = xStart; x < canvas.width; x += pixelSize) {
-            let number = getUlamNumber((x + xOf()) / pixelSize, -(y + yOf()) / pixelSize);
-            let isPrime = isPrimeSimple(number);
-            if (number == 1) {
-                // ctx.fillStyle = "red";
-                r = 255; g = 0; b = 0; a = 255;
-            }
-            else if (isPrime) {
-
-                // ctx.fillStyle = "black";
-                r = 0; g = 0; b = 0; a = 255;
-            }
-            else {
-                // ctx.fillStyle = "white";
-                r = 255; g = 255; b = 255; a = 255;
-            }
-            drawRectangle(imageData, r, g, b, a, x, y, pixelSize, pixelSize);
-            // ctx.fillRect(x, y, pixelSize, pixelSize);
-        }
-    }
-    ctx.putImageData(imageData, 0, 0);
+    drawResponsive(imageData, xStart, yStart, xStart, canvas.width, canvas.height);
 }
 
 function init() {
@@ -44,8 +54,10 @@ function init() {
     ctx = canvas.getContext("2d");
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
-    xOff = (-width + pixelSize) / 2;
-    yOff = (-height + pixelSize) / 2;
+    xOffReal = (-width + pixelSize) / 2;
+    yOffReal = (-height + pixelSize) / 2;
+    adjustOffsets();
+    drawUlam();
 }
 
 function addListeners() {
@@ -62,12 +74,21 @@ function addListeners() {
             const { pageX, pageY } = e.touches[0];
             const currentX = pageX - canvas.offsetLeft;
             const currentY = pageY - canvas.offsetTop;
-            xOff += lastX - currentX;
-            yOff += lastY - currentY;
-            console.log(xOff, yOff);
-            drawUlam(); 
-            // drawLine(lastX, lastY, currentX, currentY);
-            // adjustOff( lastX-currentX, lastY-currentY, false);
+
+            let xDiff = currentX - lastX;
+            let yDiff = currentY - lastY;
+
+            xOffReal -= xDiff;
+            yOffReal -= yDiff;
+
+            if (adjustOffsets()) {
+                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.putImageData(imageData, xDiff, yDiff);
+
+                drawUlam();
+            }
+
             lastX = currentX;
             lastY = currentY;
         }
@@ -80,6 +101,5 @@ function addListeners() {
 
 window.onload = function () {
     init();
-    drawUlam();
     addListeners();
 }
