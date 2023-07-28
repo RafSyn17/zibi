@@ -4,7 +4,7 @@ let xOffReal;
 let yOffReal;
 let xOff;
 let yOff;
-let pixelSize = 100;
+let pixelSize = 10;
 
 function adjustOffsets() {
     const xB4 = xOff;
@@ -62,21 +62,22 @@ function init() {
 
 function addListeners() {
     canvas.addEventListener('touchstart', (e) => {
-        isDrawing = true;
-        const { pageX, pageY } = e.touches[0];
-        lastX = pageX - canvas.offsetLeft;
-        lastY = pageY - canvas.offsetTop;
+        if (e.touches.length === 1) {
+            const { pageX, pageY } = e.touches[0];
+            lastX = pageX - canvas.offsetLeft;
+            lastY = pageY - canvas.offsetTop;
+        }
     });
 
     canvas.addEventListener('touchmove', (e) => {
-        if (isDrawing) {
+        if (e.touches.length === 1) {
             e.preventDefault();
             const { pageX, pageY } = e.touches[0];
             const currentX = pageX - canvas.offsetLeft;
             const currentY = pageY - canvas.offsetTop;
 
-            let xDiff = currentX - lastX;
-            let yDiff = currentY - lastY;
+            let xDiff = Math.round(currentX - lastX);  // @todo was besseres hier als Math.round
+            let yDiff = Math.round(currentY - lastY);
 
             xOffReal -= xDiff;
             yOffReal -= yDiff;
@@ -95,7 +96,6 @@ function addListeners() {
     });
 
     canvas.addEventListener('touchend', () => {
-        isDrawing = false;
     });
 }
 
