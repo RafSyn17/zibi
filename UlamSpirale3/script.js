@@ -54,48 +54,72 @@ function init() {
     ctx = canvas.getContext("2d");
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
+    canvas.style.cursor = "grab";
     xOffReal = (-width + pixelSize) / 2;
     yOffReal = (-height + pixelSize) / 2;
     adjustOffsets();
     drawUlam();
 }
 
+let lastX, lastY;
+let isDragging = false;
+
+function drag(newX, newY) {
+    let xDiff = Math.round(newX - lastX);  // @todo was besseres hier als Math.round
+    let yDiff = Math.round(newY - lastY);
+
+    xOffReal -= xDiff;
+    yOffReal -= yDiff;
+
+    if (adjustOffsets()) {
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.putImageData(imageData, xDiff, yDiff);
+
+        drawUlam();
+    }
+
+    lastX = newX;
+    lastY = newY;
+}
+
 function addListeners() {
+    canvas.addEventListener('mousedown', (e) => {
+        lastX = e.clientX - canvas.offsetLeft;
+        lastY = e.clientY - canvas.offsetTop;
+        isDragging = true;
+        canvas.style.cursor = "grabbing";
+    });
+
     canvas.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-            const { pageX, pageY } = e.touches[0];
-            lastX = pageX - canvas.offsetLeft;
-            lastY = pageY - canvas.offsetTop;
-        }
+        if (e.touches.length != 1) return;
+        const { pageX, pageY } = e.touches[0];
+        lastX = pageX - canvas.offsetLeft;
+        lastY = pageY - canvas.offsetTop;
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const newX = e.clientX - canvas.offsetLeft;
+        const newY = e.clientY - canvas.offsetTop;
+        drag(newX, newY);
     });
 
     canvas.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 1) {
-            e.preventDefault();
-            const { pageX, pageY } = e.touches[0];
-            const currentX = pageX - canvas.offsetLeft;
-            const currentY = pageY - canvas.offsetTop;
-
-            let xDiff = Math.round(currentX - lastX);  // @todo was besseres hier als Math.round
-            let yDiff = Math.round(currentY - lastY);
-
-            xOffReal -= xDiff;
-            yOffReal -= yDiff;
-
-            if (adjustOffsets()) {
-                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.putImageData(imageData, xDiff, yDiff);
-
-                drawUlam();
-            }
-
-            lastX = currentX;
-            lastY = currentY;
-        }
+        if (e.touches.length != 1) return;
+        e.preventDefault();
+        const { pageX, pageY } = e.touches[0];
+        const newX = pageX - canvas.offsetLeft;
+        const newY = pageY - canvas.offsetTop;
+        drag(newX, newY);
     });
 
     canvas.addEventListener('touchend', () => {
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        isDragging = false;
+        canvas.style.cursor = "grab";
     });
 }
 
