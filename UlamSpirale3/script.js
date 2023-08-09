@@ -20,7 +20,6 @@ function getTopLeftXY() {
     return [-posModulo(xOff, pixelSize), -posModulo(yOff, pixelSize)];
 }
 
-
 let drawTimer;
 const fps = 60;
 
@@ -99,10 +98,15 @@ function addListeners() {
     });
 
     canvas.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
         const newX = e.clientX - canvas.offsetLeft;
         const newY = e.clientY - canvas.offsetTop;
-        drag(newX, newY);
+        if (isDragging)
+            drag(newX, newY);
+        const ulamX = Math.floor((newX + xOff) / pixelSize);
+        const ulamY = Math.floor((newY + yOff) / pixelSize);
+        console.log(newX, newY);
+        console.log(ulamX, ulamY);
+        console.log(getUlamNumber(ulamX, ulamY));
     });
 
     canvas.addEventListener('touchmove', (e) => {
