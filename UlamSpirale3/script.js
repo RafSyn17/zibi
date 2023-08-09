@@ -1,10 +1,11 @@
 let canvas;
+let tooltip;
 let ctx;
 let xOffReal;
 let yOffReal;
 let xOff;
 let yOff;
-let pixelSize = 10;
+let pixelSize = 100;
 
 function adjustOffsets() {
     const xB4 = xOff;
@@ -50,10 +51,11 @@ function drawUlam() {
 
 function init() {
     canvas = document.getElementById("canvas");
+    tooltip = document.getElementById('tooltip');
     ctx = canvas.getContext("2d");
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
-    canvas.style.cursor = "grab";
+    // canvas.style.cursor = "grab";
     xOffReal = (-width + pixelSize) / 2;
     yOffReal = (-height + pixelSize) / 2;
     adjustOffsets();
@@ -82,31 +84,51 @@ function drag(newX, newY) {
     lastY = newY;
 }
 
+function handleCanvasClick(x, y) {
+    let ulamX = Math.floor((x + xOff) / pixelSize);
+    let ulamY = -Math.floor((y + yOff) / pixelSize);
+    let number = getUlamNumber(ulamX, ulamY);
+    let isPrime = isPrimeSimple(number);
+    let text = "" + number;
+    if (isPrime)
+        text += " ist eine Primzahl";
+    tooltip.style.left = `${x}px`;
+    tooltip.style.top = `${y}px`;
+    tooltip.style.display = 'block';
+
+    tooltip.textContent = text;
+}
+
+let didDrag = false;
+
 function addListeners() {
     canvas.addEventListener('mousedown', (e) => {
         lastX = e.clientX - canvas.offsetLeft;
         lastY = e.clientY - canvas.offsetTop;
+        didDrag = false;
         isDragging = true;
-        canvas.style.cursor = "grabbing";
+        tooltip.style.display = 'none';
     });
 
     canvas.addEventListener('touchstart', (e) => {
+        didDrag = false;
         if (e.touches.length != 1) return;
         const { pageX, pageY } = e.touches[0];
         lastX = pageX - canvas.offsetLeft;
         lastY = pageY - canvas.offsetTop;
+        tooltip.style.display = 'none';
     });
 
     canvas.addEventListener('mousemove', (e) => {
         const newX = e.clientX - canvas.offsetLeft;
         const newY = e.clientY - canvas.offsetTop;
-        if (isDragging)
+        if (isDragging) {
             drag(newX, newY);
+            canvas.style.cursor = "grabbing";
+            didDrag = true;
+        }
         const ulamX = Math.floor((newX + xOff) / pixelSize);
         const ulamY = Math.floor((newY + yOff) / pixelSize);
-        console.log(newX, newY);
-        console.log(ulamX, ulamY);
-        console.log(getUlamNumber(ulamX, ulamY));
     });
 
     canvas.addEventListener('touchmove', (e) => {
@@ -116,14 +138,20 @@ function addListeners() {
         const newX = pageX - canvas.offsetLeft;
         const newY = pageY - canvas.offsetTop;
         drag(newX, newY);
+        didDrag = true;
     });
 
     canvas.addEventListener('touchend', () => {
+        if (e.touches.length === 0 && !didDrag)
+            handleCanvasClick(lastX, lastY);
+
     });
 
-    canvas.addEventListener('mouseup', () => {
+    canvas.addEventListener('mouseup', (e) => {
         isDragging = false;
-        canvas.style.cursor = "grab";
+        canvas.style.cursor = "default";
+        if (!didDrag)
+            handleCanvasClick(lastX, lastY);
     });
 }
 

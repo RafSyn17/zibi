@@ -9,3 +9,13 @@ body {
     width: 100%;
     overflow: hidden;
 }
+
+#tooltip {
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 0.1em solid #ccc;
+    padding: 0.2em;
+    display: none; /* Verstecken des Tooltips */
+    font-size: 1em; /* Setzt die Schriftgröße auf das Doppelte der Standardgröße */
+    font-family: "arial";
+}
