@@ -84,13 +84,13 @@ function paintPixel(imageData, x, y, xOff, yOff) {
         r = 0; g = 0; b = 0; a = 255;
     }
     else {
-        if (Math.abs(x + xOff) != Math.abs(y + yOff)) {
-            // ctx.fillStyle = "white";
-            r = 255; g = 255; b = 255; a = 255;
+        if (Math.abs(x + xOff) == 0 || Math.abs(y + yOff) == 0) {
+            // ctx.fillStyle = 'red';
+            r = 255; g = 0; b = 0; a = 64;
         }
         else {
-            // ctx.fillStyle = 'red';
-            r = 255; g = 0; b = 0; a = 255;
+            // ctx.fillStyle = "white";
+            r = 255; g = 255; b = 255; a = 255;
         }
     }
 
