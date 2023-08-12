@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="./icon192.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ulam Spirale1.5</title>
+  <title>Ulam Spirale1</title>
   <link rel="stylesheet" href="./style.css" />
   <script type="module" src="./registersw.js"></script>
   <link rel="manifest" href="./app.webmanifest">
@@ -13,18 +13,17 @@
 
 <body class="hintergrund-schwarz">
   <div class="center">
-    <canvas id="MeinCanvas" width="1200" height="1200" onclick=" MaleUlamSpirale()"
+    <canvas id="MeinCanvas" width="1200" height="1200" onclick="InpF2.value++; MaleUlamSpirale()"
       ondblclick="Seite=InpF2.value; Seite--; MaleUlamSpirale()"></canvas>
   </div>
 
   <div class="center">
 
-    <input size=1 type="number" min=1 id="InpF0" value="1" onfocus="Zuletzt(this)" onclick="MaleUlamSpirale()">
+    <input size=1 type="number" min=1 id="InpF0" value="41" onfocus="Zuletzt(this)" onclick="MaleUlamSpirale()">
     <input size=1 type="number" min=1 max=20 id="InpF1" onfocus="Zuletzt(this)" value="12" onclick="MaleUlamSpirale()">
     <img src="img/PfeilOben.png" id="Knopf2" onclick="actionOnInput(this); MaleUlamSpirale()">
     <img src="img/PfeilUnten.png" id="Knopf1" onclick="actionOnInput(this); MaleUlamSpirale()">
-    <input size=1 type="number" min=1 max=99999 id="InpF2" onfocus="Zuletzt(this)" value=1 readonly
-      onclick="MaleUlamSpirale()">
+    <input size=1 type="number" min=1 max=99999 id="InpF2" onfocus="Zuletzt(this)" value=1 onclick="MaleUlamSpirale()">
     <input size=7 type="text" id="InpF3" value=0 readonly>
     <input size=2 type="checkbox" Name="Zahlen" id="CBF4" checked onclick="MaleUlamSpirale()">
     <input size=2 type="checkbox" Name="Linien" id="CBF5" checked onclick="MaleUlamSpirale()">
@@ -39,9 +38,9 @@
     Seite = 1;
     ItMax = 1;                   // die Größe des einzelnen "Punktes"
     let PrimZwillinge = false;
+
+
     var LetztesFeld; // der Wert des letzten Feldes ( InpF0, InpF1, InpF2 ) wird durch die Knöpfe ( Knopf1 oder Knopf2) gesteuert
-    let r;  // Radius des inneren Kreises des Quadrats
-    let center;
 
     function Zuletzt(inputFeld) {
       LetztesFeld = inputFeld;
@@ -52,17 +51,9 @@
       switch (Knopf.id) {
         case "Knopf2":
           LetztesFeld.value++;
-          if (LetztesFeld.id == "InpF2") {
-            InpF0.value = InpF3.value;
-          };
           break;
         case "Knopf1":
-          if (LetztesFeld.value > 1) {
-            LetztesFeld.value--;
-            if (LetztesFeld.id == "InpF2") {
-              InpF0.value = InpF0.value - (InpF3.value - InpF0.value);
-            };
-          }
+          LetztesFeld.value--;
       }
 
     }
@@ -78,8 +69,7 @@
         checkbox5.style.visibility = 'hidden';
       } else {
         checkbox4.style.visibility = 'visible';
-        // checkbox5.style.visibility = 'visible';
-        checkbox5.style.visibility = 'hidden';
+        checkbox5.style.visibility = 'visible';
       }
     }
 
@@ -132,6 +122,7 @@
         ctx.fillStyle = "grey";
         // nur ein experimenteller Test. Opazität der Linien verkleinenrn (Transparenz vergrößern)
         // ctx.globalAlpha = 0.4;
+
         // nur ein experimenteller Test.  Auch die nicht Primzahlen anzeigen
         //if (CBF4.checked == true) {
         //  ctx.fillText(Zahl, x, y + dm);
@@ -215,10 +206,10 @@
       let Breite = Math.floor(n / Faktor);
 
       // if (Zahl > Seite * Breite * Breite)
-      if (It > Breite * Breite)
+      if ( It > Breite * Breite)
         return false;
       // let posi = (Zahl - 1) % (Breite * Breite) + 1
-      let posi = (It - 1) % (Breite * Breite) + 1
+      let posi = ( It - 1) % (Breite * Breite) + 1
       let x = ((posi - 1) % Breite) * Faktor;
       let y = Math.floor((posi - 1) / Breite) * Faktor + Faktor;
       InpF3.value = Zahl;
@@ -248,97 +239,20 @@
     function malePunkte() {
       let start = Date.now();
       while (Date.now() - start < 3) {
+
         if (CBF6.checked) {
+          //$('$CBF4.hide')();
           if (!malePunkt2())
             return;
         }
         else {
           if (!malePunkt())
             return;
+
         };
+
       }
       setTimeout(malePunkte, 0);
-    }
-
-    function ulamSpiraleZahl(x, y) {
-      // Falls Radius r nicht bekannt wäre, dann hier so ermitteln
-      // const r = Math.max(Math.abs(x), Math.abs(y)); // Radius des inneren Kreises eines Quadrates
-      const b = 2 * r + 1;      // basis
-      const m = Math.pow(b, 2); // max = (2r+1)²
-      let s = Math.sign(y - x); // Vorzeichen der Differenz der Koordinaten
-      s = - s * s + s + 1;      // aus 0 macht 1 , sonst -1 bleibt -1 und 1 bleibt 1.
-      let d = 4 - 2 * s;        // Differenz zu m in Radien. ( d=2, wenn s = 1, d=6, wenn s = -1)
-      //  __
-      // |     oben oder links  ( s = 1  ) wird die Summe der Koordinaten zu  m addiert   und dann werden 2 Radien abgezogen
-      //  __|  unten und rechts ( s = -1 ) wird die Summe der Koordinaten von m abgezogen und dann werden 6 Radien agbezogen
-      return (m + s * (x + y) - d * r + Mitte - 1);
-    }
-
-    function anzeige() {
-      let z = ulamSpiraleZahl(x, y);
-      a = center + x * Faktor;
-      b = center - y * Faktor;
-      if (isPrime(z)) {
-        ctx.fillStyle = "lime"
-        if (InpF1.value < 4)
-          ctx.fillRect(a, b, Faktor, Faktor)
-        else
-          ctx.fillText(z, a, b, Faktor, Faktor);
-      }
-      else {
-        if (CBF4.checked == true) {
-          ctx.fillStyle = "grey";
-          ctx.fillText(z, a, b, Faktor, Faktor);
-        }
-      }
-    }
-
-    function anzeige(x, y, z) {
-      //let z = ulamSpiraleZahl(x, y);
-      a = center + x * Faktor;
-      b = center - y * Faktor;
-      if (isPrime(z)) {
-        ctx.fillStyle = "lime"
-        if (InpF1.value < 4)
-          ctx.fillRect(a, b, Faktor, Faktor)
-        else
-          ctx.fillText(z, a, b, Faktor, Faktor);
-      }
-      else {
-        if (CBF4.checked == true) {
-          ctx.fillStyle = "grey";
-          ctx.fillText(z, a, b, Faktor, Faktor);
-        }
-      }
-    }
-
-    function EinQuadratderUlamSpirale() {
-
-      x = r;
-      y = r;
-      z = Math.pow(2 * r + 1, 2) + Mitte; // Maximale Zahl in einem Quadrat + 1 d.h. obere rechte Ecke
-      InpF3.value = z - 1;                // die höchste Zahl in InpF3 anzeigen
-      let dxy = 1;
-      let iMax = 4 * r;
-      let i = 1;
-      // auf jeden Fall 1 Mal ausführen, auch wenn r = 0
-      do {
-        anzeige(x, y, z - i);           // Am Anfang immer die Ecke oben rechts anzeigen
-        if (i <= iMax) {
-          if (i <= iMax - 2 * r) {
-            x -= dxy                    // 1 Lauf obere Seite, 2 Lauf untere Seite
-          }
-          else {
-            y -= dxy                    // 1 Lauf linke Seite, 2 Lauf rechte Seite
-          }
-        }
-        else {
-          iMax = 8 * r;
-          dxy = -dxy;
-          x -= dxy
-        };
-        i++;
-      } while (i <= 8 * r);
     }
 
     function MaleUlamSpirale() {
@@ -351,9 +265,8 @@
       ctx = canvas.getContext("2d");
       ctx.strokeStyle = "rgb(0, 0, 255)"; // blau
       ctx.fillStyle = "rgb(0, 255, 0)"; // grün
-      var checkbox5 = document.getElementById('CBF5');
-      checkbox5.style.visibility = 'hidden';
 
+      //let Skalierung = 8;
       Skalierung = InpF1.value;
       if (Skalierung < 1) {
         InpF1.value = 1;
@@ -365,7 +278,7 @@
       n = MeinCanvas.width;
       //const center = Math.floor(n / 2) - dm;
 
-      center = Math.floor(n / 2);
+      const center = Math.floor(n / 2);
 
       Seite = InpF2.value;
       let ZahlenProQuadratSeite = Math.floor(n / Faktor) - 1; // Anzahl der Zahlen pro Seite von einem einzelnen Quadrat 
@@ -399,28 +312,9 @@
         It = 1;
         ctx.clearRect(0, 0, n, n);
         ctx.strokeRect(0, 0, n, n);
-        // malePunkte();
-        do
-          malePunkt2();
-        while (malePunkt2())
-
+        malePunkte();
         return;
       }
-
-      ctx.clearRect(0, 0, n, n);
-      ctx.strokeRect(0, 0, n, n);
-
-      Mitte = parseInt(InpF0.value);       // in der Mitte muss nicht unbedingt 1 stehen. z.B. 41 in der Mitte ergibt 40 Primzahlen
-      iMax = Math.floor(center / Faktor);  // Anzahl der Radien
-
-      for (i = 0; i < iMax; i++) {
-        // Quadrate mit innerem Kreis mit dem Radius r = 0 beiginnend zeichnen
-        r = i;
-        EinQuadratderUlamSpirale();
-      }
-
-      return;
-
       //if (Seite < 1) {
       //  InpF2.value = 1;
       //  return;

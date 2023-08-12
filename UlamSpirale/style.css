@@ -5,39 +5,63 @@
 .center {
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    /* Add this line */
 }
+
+.elements-row {
+    display: flex;
+    justify-content: space-around;
+    /* Change this from center to space-around */
+    width: 100%;
+    /* Add this line */
+}
+
+.elements-row>* {
+    flex: 1;
+    /* Add this line */
+    text-align: center;
+    /* Add this line if you want the content of each element to be centered */
+}
+
 #Knopf1 {
-    background-color:green;
-    margin-right: 1em ;
+    background-color: green;
+    margin-right: 1em;
 }
 
 #Knopf2 {
-    background-color:green;
-    margin-right: 1em ;
+    background-color: green;
+    margin-right: 1em;
 }
 
-#InpF1 {
-    margin-left: 8em ;
-    width: 2em;
-    font-size: 3em;
-    color:rgb(49, 156, 0);
-    background-color: #262626;
-}
-
-#InpF2 {
-    width: 3em;
-    font-size: 3em;
-    color:rgb(49, 156, 0);
-    background-color: #262626;
-}
+#InpF1,
+#InpF2,
 #InpF3 {
-    font-size: 3em;
-    color:rgb(49, 156, 0);
-    background-color: #262626;
-}
-#InpF4 {
-    font-size: 2em;
-    color:rgb(49, 156, 0);
+    color: rgb(49, 156, 0);
     background-color: #262626;
 }
 
+
+canvas {
+    width: 100%;
+}
+
+.canvas-container {
+    width: 100%;
+}
+
+input[type=number],
+input[type=text] {
+    font-size: 4vw;
+    /* Adjust this value as needed */
+}
+
+@media (max-width: 600px) {
+    .center {
+      flex-direction: column;
+    }
+    .elements-row {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }

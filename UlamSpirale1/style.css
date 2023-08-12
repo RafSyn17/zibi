@@ -1,0 +1,57 @@
+.hintergrund-schwarz {
+    background-color: #262626;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+#Knopf1 {
+    background-color: green;
+    margin-right: 1em;
+}
+
+#Knopf2 {
+    background-color: green;
+    margin-right: 1em;
+}
+
+#InpF0 {
+    margin-left: 5em;
+    width: 2em;
+    font-size: 3em;
+    color: rgb(49, 156, 0);
+    background-color: #262626;
+}
+
+#InpF1 {
+    width: 2em;
+    font-size: 3em;
+    color: rgb(49, 156, 0);
+    background-color: #262626;
+}
+
+#InpF2 {
+    width: 3em;
+    font-size: 3em;
+    color: rgb(49, 156, 0);
+    background-color: #262626;
+}
+
+#InpF3 {
+    font-size: 3em;
+    color: rgb(49, 156, 0);
+    background-color: #262626;
+}
+
+#InpF4 {
+    font-size: 2em;
+    color: rgb(49, 156, 0);
+    background-color: #262626;
+}
+
+/*canvas {
+    width: 100%;
+}
+*/

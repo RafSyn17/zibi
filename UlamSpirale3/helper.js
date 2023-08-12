@@ -74,19 +74,26 @@ function paintPixel(imageData, x, y, xOff, yOff) {
     let r, g, b, a;
     let number = getUlamNumber((x + xOff) / pixelSize, -(y + yOff) / pixelSize);
     let isPrime = isPrimeSimple(number);
-    if (number == 1) {
-        // ctx.fillStyle = "red";
-        r = 255; g = 0; b = 0; a = 255;
-    }
-    else if (isPrime) {
-
+    //if (number == 1) {
+    // ctx.fillStyle = "red";
+    //    r = 255; g = 0; b = 0; a = 255;
+    //}
+    //else
+    if (isPrime) {
         // ctx.fillStyle = "black";
         r = 0; g = 0; b = 0; a = 255;
     }
     else {
-        // ctx.fillStyle = "white";
-        r = 255; g = 255; b = 255; a = 255;
+        if (Math.abs(x + xOff) != Math.abs(y + yOff)) {
+            // ctx.fillStyle = "white";
+            r = 255; g = 255; b = 255; a = 255;
+        }
+        else {
+            // ctx.fillStyle = 'red';
+            r = 255; g = 0; b = 0; a = 255;
+        }
     }
+
     drawRectangle(imageData, r, g, b, a, x, y, pixelSize, pixelSize);
     // ctx.fillRect(x, y, pixelSize, pixelSize);
 }

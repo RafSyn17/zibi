@@ -12,24 +12,27 @@
 </head>
 
 <body class="hintergrund-schwarz">
-  <div class="center">
-    <canvas id="MeinCanvas" width="1200" height="1200" onclick="InpF2.value++; MaleUlamSpirale()"
+  <div class="center canvas-container">
+    <canvas id="MeinCanvas" onclick="InpF2.value++; MaleUlamSpirale()"
       ondblclick="Seite=InpF2.value; Seite--; MaleUlamSpirale()"></canvas>
-  </div>
-  <div class="center">
+    <div class="elements-row">
 
-    <input size=1 type="number" min=1 max=20 id="InpF1" value="13" onclick="MaleUlamSpirale()">
-    <img src="img/PfeilOben.png" id="Knopf2" onclick="InpF2.value++; MaleUlamSpirale()">
-    <img src="img/PfeilUnten.png" id="Knopf1" onclick="InpF2.value--; MaleUlamSpirale()">
-    <input size=1 type="number" min=1 max=99999 id="InpF2" value=1 onclick="MaleUlamSpirale()">
-    <input size=7 type="text" id="InpF3" value=0 readonly>
-    <input size=2 type="checkbox" Name="Zahlen" id="CBF4" onclick="MaleUlamSpirale()">
-    <input size=2 type="checkbox" Name="Linien" id="CBF5" onclick="MaleUlamSpirale()">
-    <input size=2 type="checkbox" Name="Matrix" id="CBF6" onclick="InpF1.value=18; MaleUlamSpirale()">
+      <input size=1 type="number" min=1 max=20 id="InpF1" value=13 onclick="MaleUlamSpirale()">
+      <img src="img/PfeilOben.png" id="Knopf2" onclick="InpF2.value++; MaleUlamSpirale()">
+      <img src="img/PfeilUnten.png" id="Knopf1" onclick="InpF2.value--; MaleUlamSpirale()">
+      <input size=1 type="number" min=1 max=99999 id="InpF2" value=1 onclick="MaleUlamSpirale()">
+      <input size=7 type="text" id="InpF3" value=0 readonly>
+      <input size=2 type="checkbox" Name="Zahlen" id="CBF4" onclick="MaleUlamSpirale()">
+      <input size=2 type="checkbox" Name="Linien" id="CBF5" onclick="MaleUlamSpirale()">
+      <input size=2 type="checkbox" Name="Matrix" id="CBF6" onclick=" MaleUlamSpirale()">
 
+    </div>
   </div>
 
   <script>
+    let canvas = document.getElementById('MeinCanvas');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetWidth; // Set height to match width
 
     let Skalierung, Faktor, dm, It, ItMax, n, Zahl, ZahlenProSeite, ZahlMin, ZahlMax, Seite, dx, dy, ctx, x, y;
     Seite = 1;
@@ -170,16 +173,18 @@
 
       if (isPrime(Zahl)) {
         ctx.fillStyle = "lime";
-        ctx.fillText(Zahl, x, y, Faktor, Faktor);
+        if (InpF1.value < 3) {
+          ctx.fillRect(x, y, Faktor, Faktor)
+        }
+        else {
+          ctx.fillText(Zahl, x, y, Faktor, Faktor);
+        }
       }
       else {
-        //if (CBF4.checked == true) {
-        if (InpF1.value > 1) {
+        if (InpF1.value > 5) {
           ctx.fillStyle = "grey";
           ctx.fillText(Zahl, x, y, Faktor, Faktor);
         }
-        //}
-        //ctx.fillRect(x, y, Faktor, Faktor);
       }
 
       Zahl++;

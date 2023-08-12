@@ -3,13 +3,22 @@ function getUlamNumber(x, y) {
     const basis = 1 + 2 * rad;
     const obenRechts = Math.pow(basis, 2);
 
+
     if (Math.abs(y) === rad) {
+        return obenRechts + Math.sign(y) * (2 * rad + x) - 3 * rad
+    }
+    else {
+        return obenRechts - Math.sign(x) * (2 * rad + y) - 5 * rad
+    };
+
+
+    /* if (Math.abs(y) === rad) {
         return obenRechts + rad * (2 * Math.sign(y) - 3) + Math.sign(y) * x
     }
     else {
         return obenRechts - rad * (2 * Math.sign(x) + 5) - Math.sign(x) * y
     };
-
+    */
     /* 
         const obenMitte = obenRechts - rad;
         if (y === rad)

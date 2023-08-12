@@ -5,7 +5,7 @@ let xOffReal;
 let yOffReal;
 let xOff;
 let yOff;
-let pixelSize = 100;
+let pixelSize = 10;
 
 function adjustOffsets() {
     const xB4 = xOff;
@@ -89,9 +89,9 @@ function handleCanvasClick(x, y) {
     let ulamY = -Math.floor((y + yOff) / pixelSize);
     let number = getUlamNumber(ulamX, ulamY);
     let isPrime = isPrimeSimple(number);
-    let text = "" + number;
+    let text = "" + number + "=(" + ulamX + "," + ulamY + ")";
     if (isPrime)
-        text += " ist eine Primzahl";
+        text += " ist eine Primzahl.";
     tooltip.style.left = `${x}px`;
     tooltip.style.top = `${y}px`;
     tooltip.style.display = 'block';

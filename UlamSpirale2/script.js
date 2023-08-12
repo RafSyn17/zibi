@@ -1,8 +1,6 @@
-let pixelSize = 1;
-let cxOff = 0;
-let cyOff = 0;
-let xOff = 0; // für Zahlen
-let yOff = 0; // für Zahlen
+let pixelSize = 4;
+let xOff = 0;
+let yOff = 0;
 let canvas;
 let ctx;
 let tooltip;
@@ -40,14 +38,16 @@ function paintPixel(x, y) {
             a = 255;
 
         }
-        else if (Math.abs(x + xOff) == Math.abs(y + yOff)) {
+        else
+        /**  if (Math.abs(x + xOff) == Math.abs(y + yOff)) {
             // ctx.fillStyle = 'red';
             r = 255;
             g = 0;
             b = 0;
             a = 255;
         }
-        else {
+        else
+        */ {
             // ctx.fillStyle = 'black';
             r = 0;
             g = 0;
@@ -56,7 +56,7 @@ function paintPixel(x, y) {
         }
     }
     else if (Math.abs(x + xOff) == Math.abs(y + yOff)) {
-        // ctx.fillStyle = 'red';
+        // ctx.fillStyle = 'yellow';
         r = 255;
         g = 255;
         b = 0;
@@ -71,8 +71,8 @@ function paintPixel(x, y) {
 
     }
 
-    drawRectangle(imageData, r, g, b, a, x * pixelSize + cxOff, y * pixelSize + cyOff, pixelSize, pixelSize);
-    /// ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
+    drawRectangle(imageData, r, g, b, a, x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+    // ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize); // Ein einzelnes Pixel malen
 }
 
 const fps = 60;
@@ -113,7 +113,7 @@ function drawCanvas(xMin, xMax, yMin, yMax) {
     // if (xMin === 0 && xMax === canvas.width / pixelSize && yMin === 0 && yMax === canvas.height / pixelSize)
     //     ctx.clearRect(0, 0, canvas.width, canvas.height);
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    drawCanvasStep(xMin, yMin, xMin, xMax + 1, yMax + 1); // unschön hier die +1, aber fürs Erste mal... @todo
+    drawCanvasStep(xMin, yMin, xMin, xMax, yMax);
 }
 
 function resizeCanvas() {
@@ -126,21 +126,13 @@ function resizeCanvas() {
     drawCanvas();
 }
 
-function adjustOff(x, y, isPct = true) {
-    if (isPct) {
-        x = canvas.width * x / 100;
-        y = canvas.height * y / 100;
-    }
-    const xDiff = Math.round(x / pixelSize);
-    const yDiff = Math.round(y / pixelSize);
-    const cxDiff = x % pixelSize;
-    const cyDiff = y % pixelSize;
-    if (xDiff === 0 && yDiff === 0 && cxDiff === 0 && cyDiff === 0)
+function adjustOffPct(x, y) {
+    const xDiff = Math.round(canvas.width * (x / 100) / pixelSize);
+    const yDiff = Math.round(canvas.height * (y / 100) / pixelSize);
+    if (xDiff === 0 && yDiff === 0)
         return;
     addXOff(xDiff);
     addYOff(yDiff);
-    // cxOff = (cxOff + cxDiff) % pixelSize; if( cxOff > 0 ) cxOff -= pixelSize;
-    // cyOff = (cyOff + cxDiff) % pixelSize; if( cyOff > 0 ) cyOff -= pixelSize;
     var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     // Löschen Sie den aktuellen Inhalt
@@ -189,25 +181,96 @@ function zoomOut() {
 }
 
 
-let isDrawing = false;
-let lastX = 0;
-let lastY = 0;
-
 function getTooltipData(x, y) {
     xA = Math.floor(x / pixelSize);
     yA = Math.floor(y / pixelSize);
+    let xRel = xA + xOff;
+    let yRel = - (yA + yOff);
+    let delta = (yRel - xRel);
+
     const zahl = getUlamNumber(xA + xOff, -(yA + yOff));
+    const zahlStr = zahl.toLocaleString();
     const isPrime = isPrimeSimple(zahl);
-    return [zahl, isPrime];
+    const iProben = 1000;
+    let iProbenPositiv = 0;
+    if (isPrime) {
+        //if (markedNumbers.has(zahl))
+        //    markedNumbers.delete(zahl);
+        //else {
+        //    markedNumbers.add(zahl);
+        for (i = - (iProben / 2); i < (iProben / 2); i++) {
+            xi = x + i * pixelSize;
+            yi = y - i * pixelSize;
+            xReli = xRel + i;
+            yReli = yRel + i;
+            zahli = getUlamNumber(xReli, yReli);
+            if (isPrimeSimple(zahli)) {
+                iProbenPositiv++;
+                if (markedNumbers.has(zahli)) {
+                    markedNumbers.delete(zahli);
+                    ctx.fillStyle = 'black';
+                }
+                else {
+                    markedNumbers.add(zahli);
+                    ctx.fillStyle = 'blue';
+                };
+                ctx.fillRect(xi - xi % pixelSize, yi - yi % pixelSize, pixelSize, pixelSize);
+            }
+        }
+    }
+    let txt;
+
+    if (isPrime) {
+        // if (yRel >= 0 && yRel >= Math.abs(xRel) || xRel >= 0 && xRel >= Math.abs(yRel)) {
+        // es geht doch viel einfacher :-)
+        if (yRel >= - xRel) {
+            let n = (Math.sqrt(zahl + delta) - 1) / 2;
+            let c = 1 - delta;
+            //txt = `(${xRel}, ${yRel}). Formel: f(n) = 4n² + 4n  + 1 - ${delta}. Primzahl: ${zahl}= f(${n}). `;
+            if (c > 0) {
+                txt = `Primzahl: ${zahl}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 4n + ${c}.`
+            }
+            else {
+                if (c < 0)
+                    txt = `Primzahl: ${zahl}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 4n - ${-c}.`
+                else
+                    txt = `Primzahl: ${zahl}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 4n + 1.`
+            }
+        }
+
+        else {
+            let n = Math.sqrt((zahl - delta - 1) / 4);
+            let c = 1 + delta;
+            //txt = `(${xRel}, ${yRel}). Formel: f(n) = 4n² + 1 + ${delta}. Primzahl: ${zahl}= f(${n}). `;
+
+            if (c > 0) {
+                txt = `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + ${c}.`
+            }
+            else {
+                if (c < 0)
+                    txt = `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² - ${-c}.`
+                else
+                    txt = `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 1.`
+            }
+        }
+        prHa = Math.round(iProbenPositiv / iProben *10000) / 100;
+        txt = txt + ` Primzahlenhäufigkeit: ${prHa}%`;
+    }
+    else {
+        txt = `${zahlStr} = (${xRel}, ${yRel})`
+    };
+
+    return [txt, isPrime];
 }
 
 function toggleMark(zahl, x, y) {
     if (markedNumbers.has(zahl)) {
         markedNumbers.delete(zahl);
-        if (Math.abs(Math.floor(x / pixelSize) + xOff) == Math.abs(Math.floor(y / pixelSize) + yOff))
+        /** if (Math.abs( Math.floor(x/pixelSize) + xOff) == Math.abs(Math.floor(y/pixelSize) + yOff))
             ctx.fillStyle = 'red';
         else
-            ctx.fillStyle = 'black';
+        */
+        ctx.fillStyle = 'black';
     }
     else {
         markedNumbers.add(zahl);
@@ -215,7 +278,7 @@ function toggleMark(zahl, x, y) {
     }
     let xX = x - x % pixelSize;
     let yY = y - y % pixelSize;
-    ctx.fillRect(xX + cxOff, yY + cyOff, pixelSize, pixelSize); // Ein einzelnes Pixel malen
+    ctx.fillRect(xX, yY, pixelSize, pixelSize); // Ein einzelnes Pixel malen
 }
 
 function makeToolTip(zahl, x, y) {
@@ -245,22 +308,22 @@ function addButtonListeners() {
     // Eventlistener für den "upButton"
     document.getElementById("upButton").
         addEventListener("click",
-            function () { adjustOff(0, -20); });
+            function () { adjustOffPct(0, -20); });
 
     // Eventlistener für den "leftButton"
     document.getElementById("leftButton").
         addEventListener("click",
-            function () { adjustOff(-20, 0); });
+            function () { adjustOffPct(-20, 0); });
 
     // Eventlistener für den "rightButton"
     document.getElementById("rightButton").
         addEventListener("click",
-            function () { adjustOff(20, 0); });
+            function () { adjustOffPct(20, 0); });
 
     // Eventlistener für den "downButton"
     document.getElementById("downButton").
         addEventListener("click",
-            function () { adjustOff(0, 20); });
+            function () { adjustOffPct(0, 20); });
 }
 
 window.onload = function () {
@@ -306,41 +369,5 @@ window.onload = function () {
             settingsPopup.style.display = "none";
         }
     }
-
-
-    function drawLine(startX, startY, endX, endY) {
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(endX, endY);
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 3;
-        ctx.stroke();
-        ctx.closePath();
-    }
-
-    canvas.addEventListener('touchstart', (e) => {
-        isDrawing = true;
-        const { pageX, pageY } = e.touches[0];
-        lastX = pageX - canvas.offsetLeft;
-        lastY = pageY - canvas.offsetTop;
-    });
-
-    canvas.addEventListener('touchmove', (e) => {
-        if (isDrawing) {
-            e.preventDefault();
-            const { pageX, pageY } = e.touches[0];
-            const currentX = pageX - canvas.offsetLeft;
-            const currentY = pageY - canvas.offsetTop;
-            // drawLine(lastX, lastY, currentX, currentY);
-            adjustOff( lastX-currentX, lastY-currentY, false);
-            lastX = currentX;
-            lastY = currentY;
-        }
-    });
-
-    canvas.addEventListener('touchend', () => {
-        isDrawing = false;
-    });
-
 
 }
