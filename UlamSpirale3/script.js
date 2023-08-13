@@ -127,7 +127,7 @@ function handleCanvasClick(x, y) {
         }
         text += " ist eine Primzahl.";
         prHa = Math.round(iProbenPositiv / iProben * 10000) / 100;
-        text += ` Primzahlenhaufigkeit: ${prHa}% .`;
+        text += ` Primzahlenhäufigkeit: ${prHa}% .`;
 
     }
 
