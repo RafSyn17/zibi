@@ -6,6 +6,7 @@ let yOffReal;
 let xOff;
 let yOff;
 let pixelSize = 10;
+let markedNumbers = new Set();
 
 function adjustOffsets() {
     const xB4 = xOff;
@@ -90,13 +91,69 @@ function handleCanvasClick(x, y) {
     let number = getUlamNumber(ulamX, ulamY);
     let isPrime = isPrimeSimple(number);
     let text = "" + number + "=(" + ulamX + "," + ulamY + ")";
-    if (isPrime)
+    //let [xStart, yStart] = getTopLeftXY();
+    //let imageData = ctx.getImageData(xStart, yStart, canvas.width, canvas.height);
+
+
+    const iProben = 1000;
+    let iProbenPositiv = 0;
+
+    let xX = ulamX * pixelSize - xOff;
+    let yY = -ulamY * pixelSize - yOff;
+
+
+    if (isPrime) {
+        for (i = - (iProben / 2); i < (iProben / 2); i++) {
+            xi = xX + i * pixelSize;
+            yi = yY - i * pixelSize;
+            xReli = ulamX + i;
+            yReli = ulamY + i;
+            zahli = getUlamNumber(xReli, yReli);
+            if (isPrimeSimple(zahli)) {
+                iProbenPositiv++;
+                /*if (markedNumbers.has(zahli)) {
+                    markedNumbers.delete(zahli);
+                    ctx.fillStyle = 'black';
+                }
+                else
+                 {
+                    markedNumbers.add(zahli);
+                */    ctx.fillStyle = 'blue';
+                //};
+
+
+                ctx.fillRect(xi, yi, pixelSize, pixelSize);
+            }
+        }
         text += " ist eine Primzahl.";
+        prHa = Math.round(iProbenPositiv / iProben * 10000) / 100;
+        text += ` Primzahlenhaufigkeit: ${prHa}% .`;
+
+    }
+
+
+    /*   if (isPrime) {
+           if (markedNumbers.has(number)) {
+               markedNumbers.delete(number);
+               ctx.fillStyle = 'black';
+               r = 0; g = 0; b = 0; a = 255;
+           }
+           else {
+               markedNumbers.add(number);
+               ctx.fillStyle = 'blue';
+               r = 0; g = 0; b = 255; a = 255;
+           }
+           ctx.fillRect(xX, yY, pixelSize, pixelSize); // Ein einzelnes Pixel malen
+           //drawRectangle(imageData, r, g, b, a, x, y, pixelSize, pixelSize);
+   
+           text += " ist eine Primzahl.";
+       }
+   */
     tooltip.style.left = `${x}px`;
     tooltip.style.top = `${y}px`;
     tooltip.style.display = 'block';
-
     tooltip.textContent = text;
+
 }
 
 let didDrag = false;
