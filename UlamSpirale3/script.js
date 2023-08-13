@@ -107,7 +107,7 @@ function addListeners() {
         lastY = e.clientY - canvas.offsetTop;
         didDrag = false;
         isDragging = true;
-        tooltip.style.display = 'none';
+        // tooltip.style.display = 'none';
     });
 
     canvas.addEventListener('touchstart', (e) => {
@@ -116,7 +116,7 @@ function addListeners() {
         const { pageX, pageY } = e.touches[0];
         lastX = pageX - canvas.offsetLeft;
         lastY = pageY - canvas.offsetTop;
-        tooltip.style.display = 'none';
+        // tooltip.style.display = 'none';
     });
 
     canvas.addEventListener('mousemove', (e) => {
@@ -153,6 +153,8 @@ function addListeners() {
         if (!didDrag)
             handleCanvasClick(lastX, lastY);
     });
+
+    tooltip.addEventListener('click', function () { tooltip.style.display = 'none'; });
 }
 
 window.onload = function () {
