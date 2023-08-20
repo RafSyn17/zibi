@@ -94,15 +94,26 @@ function handleCanvasClick(x, y) {
     //let [xStart, yStart] = getTopLeftXY();
     //let imageData = ctx.getImageData(xStart, yStart, canvas.width, canvas.height);
 
+    tooltip.style.left = `${canvas.width * 0.05}px`;
+    tooltip.style.top = `${canvas.height * 0.8}px`;
+    tooltip.style.display = 'block';
+    tooltip.style.color = "black";
+
+
 
     const iProben = 1000;
-    let iProbenPositiv = 0;
 
     let xX = ulamX * pixelSize - xOff;
     let yY = -ulamY * pixelSize - yOff;
 
 
+
     if (isPrime) {
+
+        text += " ist eine Primzahl.";
+
+        let iProbenPositiv1 = 0;
+        let iProbenPositiv2 = 0;
         for (i = - (iProben / 2); i < (iProben / 2); i++) {
             xi = xX + i * pixelSize;
             yi = yY - i * pixelSize;
@@ -110,7 +121,7 @@ function handleCanvasClick(x, y) {
             yReli = ulamY + i;
             zahli = getUlamNumber(xReli, yReli);
             if (isPrimeSimple(zahli)) {
-                iProbenPositiv++;
+                iProbenPositiv1++;
                 /*if (markedNumbers.has(zahli)) {
                     markedNumbers.delete(zahli);
                     ctx.fillStyle = 'black';
@@ -124,14 +135,39 @@ function handleCanvasClick(x, y) {
 
                 ctx.fillRect(xi, yi, pixelSize, pixelSize);
             }
+
+            xi = xX - i * pixelSize;
+            yi = yY - i * pixelSize;
+            xReli = ulamX - i;
+            yReli = ulamY + i;
+            zahli = getUlamNumber(xReli, yReli);
+            if (isPrimeSimple(zahli)) {
+                iProbenPositiv2++;
+                /*if (markedNumbers.has(zahli)) {
+                    markedNumbers.delete(zahli);
+                    ctx.fillStyle = 'black';
+                }
+                else
+                 {
+                    markedNumbers.add(zahli);
+                */    ctx.fillStyle = 'green';
+                //};
+                ctx.fillRect(xi, yi, pixelSize, pixelSize);
+            }
         }
-        text += " ist eine Primzahl.";
-        prHa = Math.round(iProbenPositiv / iProben * 10000) / 100;
-        text += ` Primzahlenhäufigkeit: ${prHa}% .`;
+
+        text += ` Primzahlenhäufigkeiten:`;
+
+        prHa1 = Math.round(iProbenPositiv1 / iProben * 10000) / 100;
+        text += ` <span style='color: blue;'> ${prHa1} </span>% ,`;
+        prHa2 = Math.round(iProbenPositiv2 / iProben * 10000) / 100;
+        text += ` <span style='color: green;'> ${prHa2} </span>% .`;
+
 
     }
 
-
+    // tooltip.textContent = text;
+    tooltip.innerHTML = text;
     /*   if (isPrime) {
            if (markedNumbers.has(number)) {
                markedNumbers.delete(number);
@@ -148,11 +184,10 @@ function handleCanvasClick(x, y) {
    
            text += " ist eine Primzahl.";
        }
-   */
+   
     tooltip.style.left = `${x}px`;
     tooltip.style.top = `${y}px`;
-    tooltip.style.display = 'block';
-    tooltip.textContent = text;
+   */
 
 }
 
