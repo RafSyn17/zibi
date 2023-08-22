@@ -280,7 +280,45 @@ function getTooltipData(x, y) {
             }
         }
         prHa1 = Math.round(iProbenPositiv1 / iProben * 10000) / 100;
-        txt = txt + ` Primzahlenhäufigkeit1: <span style='color: blue;'>${prHa1}</span>%`;
+        txt = txt + ` Primzahlenhäufigkeit1: <span style='color: blue;'>${prHa1}</span>%.`;
+        txt += "&#010;";
+
+        let summe = yRel + xRel;
+
+        if (yRel >= xRel) {
+            let n = Math.max(Math.abs(xRel), Math.abs(yRel));  // ( zahl + delta ) = (4*n² + 2*n + 1)
+            let c = 1 + summe;
+            //txt = `(${xRel}, ${yRel}). Formel: f(n) = 4n² + 2n  + 1 - ${delta}. Primzahl: ${zahl}= f(${n}). `;
+            if (c > 0) {
+                txt += `Primzahl: ${zahl}=(${xRel}, ${yRel})=<span style='color: green;'>f(${n}). f(n) = 4n² + 2n + ${c}</span>.`
+            }
+            else {
+                if (c < 0)
+                    txt += `Primzahl: ${zahl}=(${xRel}, ${yRel})=<span style='color: green;'>f(${n}). f(n) = 4n² + 2n - ${-c}</span>.`
+                else
+                    txt += `Primzahl: ${zahl}=(${xRel}, ${yRel})=<span style='color: green;'>f(${n}). f(n) = 4n² + 2n + 1</span>.`
+            }
+        }
+
+        else {
+            let n = Math.max(Math.abs(xRel), Math.abs(yRel));;  // (zahl - delta) = (2*n)² -2n + 1
+
+            let c = 1 - summe;
+
+            if (c > 0) {
+                txt += `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=<span style='color: green;'>f(${n}). f(n) = 4n² -2n + ${c}</span>.`
+            }
+            else {
+                if (c < 0)
+                    txt += `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=<span style='color: green;'>f(${n}). f(n) = 4n² -2n - ${-c}</span>.`
+                else
+                    txt += `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=<span style='color: green;'>f(${n}). f(n) = 4n² -2n + 1</span>.`
+            }
+        }
+        prHa2 = Math.round(iProbenPositiv2 / iProben * 10000) / 100;
+        txt = txt + ` Primzahlenhäufigkeit2: <span style='color: green;'>${prHa2}</span>%.`;
+
+
     }
     else {
         txt = `${zahlStr} = (${xRel}, ${yRel})`
