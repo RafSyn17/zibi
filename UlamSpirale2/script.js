@@ -55,12 +55,18 @@ function paintPixel(x, y) {
             a = 255;
         }
     }
-    else if (Math.abs(x + xOff) == Math.abs(y + yOff)) {
-        // ctx.fillStyle = 'yellow';
-        r = 255;
-        g = 255;
-        b = 0;
-        a = 255;
+    else if (Math.abs(x + xOff) == 0 || Math.abs(y + yOff) == 0) {
+        // ctx.fillStyle = 'red';
+        r = 255; g = 0; b = 0; a = 64;
+
+        /*if (Math.abs(x + xOff) == Math.abs(y + yOff)) {
+            // ctx.fillStyle = 'yellow';
+            r = 255;
+            g = 255;
+            b = 0;
+            a = 255;
+        }
+    */
     }
     else {
         // white
@@ -192,7 +198,8 @@ function getTooltipData(x, y) {
     const zahlStr = zahl.toLocaleString();
     const isPrime = isPrimeSimple(zahl);
     const iProben = 1000;
-    let iProbenPositiv = 0;
+    let iProbenPositiv1 = 0;
+    let iProbenPositiv2 = 0;
     if (isPrime) {
         //if (markedNumbers.has(zahl))
         //    markedNumbers.delete(zahl);
@@ -205,7 +212,7 @@ function getTooltipData(x, y) {
             yReli = yRel + i;
             zahli = getUlamNumber(xReli, yReli);
             if (isPrimeSimple(zahli)) {
-                iProbenPositiv++;
+                iProbenPositiv1++;
                 if (markedNumbers.has(zahli)) {
                     markedNumbers.delete(zahli);
                     ctx.fillStyle = 'black';
@@ -216,6 +223,25 @@ function getTooltipData(x, y) {
                 };
                 ctx.fillRect(xi - xi % pixelSize, yi - yi % pixelSize, pixelSize, pixelSize);
             }
+
+            xi = x - i * pixelSize;
+            yi = y - i * pixelSize;
+            xReli = xRel - i;
+            yReli = yRel + i;
+            zahli = getUlamNumber(xReli, yReli);
+            if (isPrimeSimple(zahli)) {
+                iProbenPositiv2++;
+                if (markedNumbers.has(zahli)) {
+                    markedNumbers.delete(zahli);
+                    ctx.fillStyle = 'black';
+                }
+                else {
+                    markedNumbers.add(zahli);
+                    ctx.fillStyle = 'green';
+                };
+                ctx.fillRect(xi - xi % pixelSize, yi - yi % pixelSize, pixelSize, pixelSize);
+            }
+
         }
     }
     let txt;
@@ -224,37 +250,37 @@ function getTooltipData(x, y) {
         // if (yRel >= 0 && yRel >= Math.abs(xRel) || xRel >= 0 && xRel >= Math.abs(yRel)) {
         // es geht doch viel einfacher :-)
         if (yRel >= - xRel) {
-            let n = (Math.sqrt(zahl + delta) - 1) / 2;
+            let n = (Math.sqrt(zahl + delta) - 1) / 2;  // ( zahl + delta ) = (2*n + 1)²
             let c = 1 - delta;
             //txt = `(${xRel}, ${yRel}). Formel: f(n) = 4n² + 4n  + 1 - ${delta}. Primzahl: ${zahl}= f(${n}). `;
             if (c > 0) {
-                txt = `Primzahl: ${zahl}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 4n + ${c}.`
+                txt = `Primzahl: ${zahl}=(${xRel}, ${yRel})=<span style='color: blue;'>f(${n}). f(n) = 4n² + 4n + ${c}</span>.`
             }
             else {
                 if (c < 0)
-                    txt = `Primzahl: ${zahl}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 4n - ${-c}.`
+                    txt = `Primzahl: ${zahl}=(${xRel}, ${yRel})=<span style='color: blue;'>f(${n}). f(n) = 4n² + 4n - ${-c}</span>.`
                 else
-                    txt = `Primzahl: ${zahl}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 4n + 1.`
+                    txt = `Primzahl: ${zahl}=(${xRel}, ${yRel})=<span style='color: blue;'>f(${n}). f(n) = 4n² + 4n + 1</span>.`
             }
         }
 
         else {
-            let n = Math.sqrt((zahl - delta - 1) / 4);
+            let n = Math.sqrt((zahl - delta - 1) / 4);  // (zahl - delta) = (2*n)² + 1
             let c = 1 + delta;
             //txt = `(${xRel}, ${yRel}). Formel: f(n) = 4n² + 1 + ${delta}. Primzahl: ${zahl}= f(${n}). `;
 
             if (c > 0) {
-                txt = `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + ${c}.`
+                txt = `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=<span style='color: blue;'>f(${n}). f(n) = 4n² + ${c}</span>.`
             }
             else {
                 if (c < 0)
-                    txt = `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² - ${-c}.`
+                    txt = `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=<span style='color: blue;'>f(${n}). f(n) = 4n² - ${-c}</span>.`
                 else
-                    txt = `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 1.`
+                    txt = `Primzahl: ${zahlStr}=(${xRel}, ${yRel})=<span style='color: blue;'>f(${n}). f(n) = 4n² + 1</span>.`
             }
         }
-        prHa = Math.round(iProbenPositiv / iProben *10000) / 100;
-        txt = txt + ` Primzahlenhäufigkeit: ${prHa}%`;
+        prHa1 = Math.round(iProbenPositiv1 / iProben * 10000) / 100;
+        txt = txt + ` Primzahlenhäufigkeit1: <span style='color: blue;'>${prHa1}</span>%`;
     }
     else {
         txt = `${zahlStr} = (${xRel}, ${yRel})`
@@ -285,8 +311,8 @@ function makeToolTip(zahl, x, y) {
     tooltip.style.left = `${x}px`;
     tooltip.style.top = `${y}px`;
     tooltip.style.display = 'block';
-
-    tooltip.textContent = `${zahl}`;
+    // tooltip.textContent = `${zahl}`;
+    tooltip.innerHTML = zahl;
 }
 
 function init() {
@@ -337,12 +363,13 @@ window.onload = function () {
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
 
-        const [zahl, isPrime] = getTooltipData(x, y);
+        const [txt, isPrime] = getTooltipData(x, y);
 
-        if (isPrime)
+        /*if (isPrime)
             toggleMark(zahl, x, y);
+        */
 
-        makeToolTip(zahl, event.pageX + pixelSize, event.pageY + pixelSize);
+        makeToolTip(txt, event.pageX + pixelSize, event.pageY + pixelSize);
     });
 
     // Schließen-Symbol hinzufügen und Event-Listener
