@@ -186,7 +186,6 @@ function zoomOut() {
     resizeCanvas();
 }
 
-
 function getTooltipData(x, y) {
     xA = Math.floor(x / pixelSize);
     yA = Math.floor(y / pixelSize);
@@ -241,7 +240,6 @@ function getTooltipData(x, y) {
                 };
                 ctx.fillRect(xi - xi % pixelSize, yi - yi % pixelSize, pixelSize, pixelSize);
             }
-
         }
     }
     let txt;
@@ -280,12 +278,13 @@ function getTooltipData(x, y) {
             }
         }
         prHa1 = Math.round(iProbenPositiv1 / iProben * 10000) / 100;
-        txt = txt + ` <span style='color: blue;'>Primzahlenhäufigkeit: ${prHa1}%.</span>`;
-        txt += "&#010;";
+        txt = txt + ` <span style='color: blue;'>Primzahlenhäufigkeit: ${prHa1}%.</span></br>`;
+        //txt += "&#010;";
+        //txt += "</br>";
 
         let summe = yRel + xRel;
         if (yRel >= xRel) {
-            let n = Math.max(Math.abs(xRel), Math.abs(yRel));  // ( zahl + delta ) = (4*n² + 2*n + 1)
+            let n = Math.max(Math.abs(xRel), Math.abs(yRel));  // ( zahl + summe ) = (4*n² + 2*n + 1)
             let c = 1 + summe;
             //txt = `(${xRel}, ${yRel}). Formel: f(n) = 4n² + 2n  + 1 - ${delta}. Primzahl: ${zahl}= f(${n}). `;
             if (c > 0) {
@@ -343,12 +342,18 @@ function toggleMark(zahl, x, y) {
     ctx.fillRect(xX, yY, pixelSize, pixelSize); // Ein einzelnes Pixel malen
 }
 
-function makeToolTip(zahl, x, y) {
-    tooltip.style.left = `${x}px`;
-    tooltip.style.top = `${y}px`;
+function makeToolTip(text, x, y) {
+    //tooltip.style.left = `${x}px`;
+    //tooltip.style.top = `${y}px`;
+
+    tooltip.style.left = `${canvas.width * 0.15}px`;
+    tooltip.style.top = `${canvas.height * 0.85}px`;
     tooltip.style.display = 'block';
+    tooltip.style.fontSize = "28px";
+    tooltip.style.opacity = 0.85;
+
     // tooltip.textContent = `${zahl}`;
-    tooltip.innerHTML = zahl;
+    tooltip.innerHTML = text;
 }
 
 function init() {
