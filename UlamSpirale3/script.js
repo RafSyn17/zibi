@@ -98,15 +98,12 @@ function handleCanvasClick(x, y) {
     tooltip.style.top = `${canvas.height * 0.8}px`;
     tooltip.style.display = 'block';
     tooltip.style.color = "black";
-
-
-
+    tooltip.style.fontSize = "30px";
+    tooltip.style.opacity = 0.85;
     const iProben = 1000;
 
     let xX = ulamX * pixelSize - xOff;
     let yY = -ulamY * pixelSize - yOff;
-
-
 
     if (isPrime) {
 
@@ -155,15 +152,11 @@ function handleCanvasClick(x, y) {
                 ctx.fillRect(xi, yi, pixelSize, pixelSize);
             }
         }
-
         text += ` Primzahlenhäufigkeiten:`;
-
         prHa1 = Math.round(iProbenPositiv1 / iProben * 10000) / 100;
         text += ` <span style='color: blue;'> ${prHa1} </span>% ,`;
         prHa2 = Math.round(iProbenPositiv2 / iProben * 10000) / 100;
         text += ` <span style='color: green;'> ${prHa2} </span>% .`;
-
-
     }
 
     // tooltip.textContent = text;
