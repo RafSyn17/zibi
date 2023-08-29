@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primzahlendichte mit der Funktion ax²+bx+c testen </title>
+</head>
+
+<body>
+  <label> f(x)= <input type="number" id="InpF1" value=4 name="a" style="width: 2pc"> * x² +
+  </label>
+  <label> <input type="number" id="InpF2" value=-2 name="b" style="width: 2pc"> * x +
+  </label>
+  <label> <input type="number" id="InpF3" value=41 name="c" style="width: 3pc"> </br>
+  </label>
+  <label> Von: <input type="number" id="InpF4" value=-19 name="Von" style="width: 4pc">
+  </label>
+  <label> Anzahl: <input type="number" id="InpF5" value=40 name="Schr" style="width: 3pc">
+  </label>
+  <label> Wiederholungen: <input type="number" id="InpF6" value=1 name="Wied" style="width: 2pc"
+      onchange="CB1Sichtbarkeit(this)"> </br>
+  </label>
+  <label> Proben anzeigen <input type="checkbox" id="CB1" checked style="width: 2pc">
+  </label>
+  <label> Start <input type="button" id="B1" style="width: 2pc" onclick="primDichteVor()">
+  </label>
+  <p id="output">
+  </p>
+</body>
+
+<script language="JavaScript">
+
+  let TextSumme = ``;
+
+  let a, b, c, Schritt;
+
+  primDichteVor();
+
+  function CB1Sichtbarkeit(Knopf) {
+    if (Knopf.value > 1) {
+      CB1.checked = false;
+      CB1.style.visibility = 'hidden'
+    }
+    else
+      CB1.style.visibility = 'visible'
+  };
+
+  function qFunktion(x) {
+    return (a * Math.pow(x, 2) + b * x + c);
+  }
+
+  function PrimZahl(num) {
+    if (num < 2) return false;
+    for (let i = 2; i <= Math.sqrt(num); i++) {
+      if (num % i === 0) return false;
+    }
+    return true;
+  }
+
+  function primDichteVor() {
+    a = parseInt(InpF1.value);
+    b = parseInt(InpF2.value);
+    c = parseInt(InpF3.value);
+    let iMi = parseInt(InpF4.value);
+    Schritt = parseInt(InpF5.value);
+    let iMa = iMi + Schritt - 1;
+    if (document.getElementById('CB1').checked)
+      primDichte1(iMi, iMa)
+    else {
+      let jMa = parseInt(InpF6.value);
+      primDichte2(iMi, iMa, jMa);
+    }
+  }
+
+  function primDichte1(iMin, iMax) {
+    InpF6.value = 1;
+    TextSumme = "";
+    TextProben = "";
+    let positiveProben = 0;
+    for (i = iMin; i <= iMax; i++) {
+      let z = qFunktion(i);
+      let zStr = z.toLocaleString();
+      if (PrimZahl(z)) {
+        positiveProben++;
+        TextProben += `f(${i}) =  <span style='color: #FF0000;'>  ${zStr} </span> </br>`  // rot
+      }
+      else
+        TextProben += `f(${i}) =  <span style='color: #000000;'>  ${zStr} </span> </br>`;  // schwarz
+    };
+
+    let anzahl = iMax - iMin + 1;
+    let quotient = positiveProben / anzahl;
+    TextSumme = `Es gibt ${anzahl} Proben von ${iMin} bis ${iMax}. Davon ${positiveProben} sind Primzahlen. Quotient : ${quotient}. </br>` + TextSumme;
+    document.getElementById("output").innerHTML = TextSumme + TextProben;
+  }
+
+  function primDichte2(iMin, iMax, jMax) {
+    let Tab = "\t";
+    TextProben = "";
+    TextSumme = "";
+
+    for (j = 1; j <= jMax; j++) {
+      let positiveProben = 0;
+      for (i = iMin; i <= iMax; i++) {
+        let z = qFunktion(i);
+        if (PrimZahl(z)) {
+          positiveProben++;
+        }
+      }
+      let anzahl = iMax - iMin + 1;
+      let quotient = positiveProben / anzahl;
+      TextSumme += `Von ${iMin} bis ${iMax} gibt es ${positiveProben} Primzahlen.  Quotient : ${quotient}. </br>`;
+
+      iMin = iMin + Schritt;
+      iMax = iMin + Schritt - 1;
+    }
+    document.getElementById("output").innerHTML = TextSumme;
+  }
+
+</script>
+
+</html>
