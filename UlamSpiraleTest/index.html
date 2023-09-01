@@ -88,17 +88,29 @@
       else
         TextProben += `f(${i}) =  <span style='color: #000000;'>  ${zStr} </span> </br>`;  // schwarz
     };
+    let tableProben = "<table border='1'><tr><th>x</th><th>f(x)</th></tr>";
+    for (i = iMin; i <= iMax; i++) {
+      let z = qFunktion(i);
+      let zStr = z.toLocaleString();
+      if (PrimZahl(z)) {
+        tableProben += `<tr><td>${i}</td><td style='color: #FF0000;'>${zStr}</td></tr>`;
+      } else {
+        tableProben += `<tr><td>${i}</td><td>${zStr}</td></tr>`;
+      }
+    }
+    tableProben += "</table>";
 
     let anzahl = iMax - iMin + 1;
     let quotient = positiveProben / anzahl;
     TextSumme = `Es gibt ${anzahl} Proben von ${iMin} bis ${iMax}. Davon ${positiveProben} sind Primzahlen. Quotient : ${quotient}. </br>` + TextSumme;
-    document.getElementById("output").innerHTML = TextSumme + TextProben;
+    document.getElementById("output").innerHTML = TextSumme + tableProben;
   }
 
   function primDichte2(iMin, iMax, jMax) {
     let Tab = "\t";
     TextProben = "";
     TextSumme = "";
+    let tableSumme = "<table border='1'><tr><th>iMin</th><th>iMax</th><th>Primzahlen</th><th>Quotient</th></tr>";
 
     for (j = 1; j <= jMax; j++) {
       let positiveProben = 0;
@@ -111,11 +123,13 @@
       let anzahl = iMax - iMin + 1;
       let quotient = positiveProben / anzahl;
       TextSumme += `Von ${iMin} bis ${iMax} gibt es ${positiveProben} Primzahlen.  Quotient : ${quotient}. </br>`;
+      tableSumme += `<tr><td>${iMin}</td><td>${iMax}</td><td>${positiveProben}</td><td>${quotient}</td></tr>`;
 
       iMin = iMin + Schritt;
       iMax = iMin + Schritt - 1;
     }
-    document.getElementById("output").innerHTML = TextSumme;
+    tableSumme += "</table>";
+    document.getElementById("output").innerHTML = tableSumme;
   }
 
 </script>
