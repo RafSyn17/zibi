@@ -4,8 +4,7 @@ var cacheName = 'Taschenrechner1';
 // Dateien, die im Cache gespeichert werden sollen
 var filesToCache = [
     './',
-    './index.html',
-    'https://rsy17.de/zibi/Taschenrechner1/index.html'
+    './index.html'
 ];
 
 // Installation des Service Workers
