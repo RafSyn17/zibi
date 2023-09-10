@@ -6,10 +6,10 @@
     "display": "standalone",
     "start_url": "./index.html",
     "description": "Taschenrechner1",
-    "orientation": "portrait",
+    "orientation": "any",
     "icons": [
         {
-            "src": "./quadratwurzel.png",
+            "src": "./taschenrechner.png",
             "sizes": "192x192"
         }
     ]
