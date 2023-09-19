@@ -1,0 +1,217 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>t1test</title>
+  <!--<link rel="icon" type="image/png" href="./t1.png"> -->
+  <link rel="manifest" href="./manifest.json">
+
+  <script type="module">
+
+    // Register the service worker
+
+    if ('serviceWorker' in navigator) {
+      // Wait for the 'load' event to not block other work
+      window.addEventListener('load', async () => {
+        // Try to register the service worker.
+        try {
+          // Capture the registration for later use, if needed
+          let reg;
+
+          // Use ES Module version of our Service Worker in development
+          if (import.meta.env?.DEV) {
+            reg = await navigator.serviceWorker.register('./service-worker.js', {
+              type: 'module',
+            });
+          } else {
+            // In production, use the normal service worker registration
+            reg = await navigator.serviceWorker.register('./service-worker.js');
+          }
+
+          console.log('Service worker registered! 😎', reg);
+        } catch (err) {
+          console.log('😥 Service worker registration failed: ', err);
+        }
+      });
+    }
+
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      background-color: rgb(16, 83, 23);
+    }
+
+    table {
+      width: 100%;
+      height: 80vh;
+      /* padding: 0px; */
+    }
+
+    td {
+      width: 20%;
+      text-align: center;
+      font-size: 26px;
+    }
+
+    #Dis {
+      width: 100%;
+      height: 10vh;
+      font-size: 38px;
+      text-align: left;
+      background-color: rgb(3, 190, 3);
+      color: white
+    }
+
+
+    #Mem {
+      margin-left: 0px;
+      width: 100%;
+      height: 10vh;
+      font-size: 38px;
+      text-align: left;
+      background-color: green;
+
+    }
+  </style>
+
+  <script language="JavaScript">
+
+
+    function addChar(character) {
+
+      if (Dis.value == null || Dis.value == "0")
+
+        Dis.value = character
+      else
+        Dis.value += character
+    }
+
+    function toM() {
+      Mem.value = Dis.value;
+      localStorage.setItem('memt1test', Dis.value);
+    }
+
+    function fromM() {
+      // addChar( localStorage.getItem('memt1test', Mem.value));
+      addChar(Mem.value);
+    }
+
+
+    function cos() {  // let Erg = document.getElementById('Dis');
+      Dis.value = Math.cos(Dis.value);
+    }
+
+    function sin() {  // let Erg = document.getElementById('Dis');
+      Dis.value = Math.sin(Dis.value);
+    }
+
+    function Sqrt() {  // let Erg = document.getElementById('Dis');
+      Dis.value = Math.sqrt(Dis.value);
+    }
+
+    function ln() {  //let Erg = document.getElementById('Dis');
+      Dis.value = Math.log(Dis.value);
+    }
+
+    function exp() { //let Erg = document.getElementById('Dis');
+      Dis.value = Math.exp(Dis.value);
+    }
+
+    function Square() { // let Erg = document.getElementById('Dis');
+      Dis.value = eval(Dis.value) * eval(Dis.value)
+    }
+
+    function constpi() { // let Erg = document.getElementById('Dis');
+      return (eval(Math.PI))
+    }
+
+    function Clear() { // let Erg = document.getElementById('Dis');
+      Dis.value = 0
+    }
+
+
+    function delChar() { //let Erg = document.getElementById('Dis');
+      Dis.value = Dis.value.substring(0, Dis.value.length - 1)
+    }
+
+
+    function changeSign() {   // let Erg = document.getElementById('Dis');
+      if (Dis.value.substring(0, 1) == "-") {
+        Dis.value = Dis.value.substring(1, Dis.value.length)
+      }
+      else {
+        Dis.value = "-" + Dis.value
+      }
+    }
+
+    function roundNumber(num, stellen) {
+      return Math.round(num * Math.pow(10, stellen)) / Math.pow(10, stellen);
+    }
+
+    function compute() {   //let Erg = document.getElementById('Dis');
+      let Words = Dis.value.split('^');
+      // "Words" enthält 2 Elemente : "NBasis" links von '^' und "NExponent" rechts davon
+      let NBasis = Number(eval(Words[0]));
+      let NExponent = Number(eval(Words[1]));
+      let Erg = 0;
+      if (isNaN(NExponent)) {
+        // '^' wurde nicht gefunden
+        Erg = NBasis
+      }
+      else {
+        Erg = Math.pow(NBasis, NExponent)
+      }
+
+      // Rundung auf 13 Nachkommastellen
+      Dis.value = roundNumber(Erg, 13)
+    }
+
+
+    function checkNum(str) {
+      for (var i = 0; i < str.length; i++) {
+        var ch = str.substring(i, i + 1)
+        if (ch < "0" || ch > "9") {
+          if (ch != "/" && ch != "*" && ch != "+" && ch != "-" && ch != "."
+            && ch != "(" && ch != ")" && ch != "e") {
+            alert("falsche Eingabe !")
+            return false
+          }
+        }
+      }
+      return true
+    }
+
+  </script>
+
+</head>
+
+<body text=white>
+  <div>
+    <input name="mem" readonly id="Mem">
+  </div>
+  <div>
+    <input name="display" id="Dis" value="0">
+  </div>
+  <TABLE>
+
+    <TR>
+      <TD onClick="toM()">MSet</TD>
+      <TD onClick="fromM()">MRecall</TD>
+      <TD onClick="delChar()">DEL</TD>
+      <TD onClick="Clear()">C</TD>
+    </TR>
+    <script>
+      Mem.value = localStorage.getItem('memt1test');
+    </script>
+
+
+  </TABLE>
+
+
+</body>
+
+</html>
