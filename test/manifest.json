@@ -1,0 +1,16 @@
+{
+    "name": "test",
+    "short_name": "test_short",
+    "theme_color": "#262626",
+    "background_color": "#262626",
+    "display": "standalone",
+    "start_url": "./index.html",
+    "description": "test_desc",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "./t1.png",
+            "sizes": "192x192"
+        }
+    ]
+}
