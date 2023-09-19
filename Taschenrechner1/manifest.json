@@ -1,11 +1,11 @@
 {
     "name": "Taschenrechner1",
-    "short_name": "Rechner",
+    "short_name": "T1",
     "theme_color": "#262626",
     "background_color": "#262626",
     "display": "standalone",
     "start_url": "./index.html",
-    "description": "Taschenrechner1",
+    "description": "Taschenrechner1 calculator",
     "orientation": "any",
     "icons": [
         {
