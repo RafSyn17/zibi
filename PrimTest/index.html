@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrimTest</title>
+  <!--<link rel="icon" type="image/png" href="./Primzahlen.png"> -->
+  <link rel="manifest" href="./manifest.json">
+
+  <script type="module">
+    // Register the service worker
+    if ('serviceWorker' in navigator) {
+      // Wait for the 'load' event to not block other work
+      window.addEventListener('load', async () => {
+        // Try to register the service worker.
+        try {
+          // Capture the registration for later use, if needed
+          let reg;
+
+          // Use ES Module version of our Service Worker in development
+          if (import.meta.env?.DEV) {
+            reg = await navigator.serviceWorker.register('./service-worker.js', {
+              type: 'module',
+            });
+          } else {
+            // In production, use the normal service worker registration
+            reg = await navigator.serviceWorker.register('./service-worker.js');
+          }
+
+          console.log('Service worker registered! 😎', reg);
+        } catch (err) {
+          console.log('😥 Service worker registration failed: ', err);
+        }
+      });
+    }
+
+  </script>
+
+</head>
+
+<body>
+  <label> y=f(x)= <input type="number" id="InpF1" value=4 name="a" style="width: 2pc"> * x² +
+  </label>
+  <label> <input type="number" id="InpF2" value=-2 name="b" style="width: 2pc"> * x +
+  </label>
+  <label> <input type="number" id="InpF3" value=41 name="c" style="width: 3pc"> </br>
+  </label>
+  <label> Von: <input type="number" id="InpF4" value=-19 name="Von" style="width: 4pc">
+  </label>
+  <label> Anzahl: <input type="number" id="InpF5" value=40 name="Schr" style="width: 3pc"> </br>
+  </label>
+  <label> Reihen: <input type="number" id="InpF6" value=1 name="Wied" style="width: 2pc"
+      onchange="CB1Sichtbarkeit(this)"> </br>
+  </label>
+  <label> Proben anzeigen <input type="checkbox" id="CB1" checked style="width: 2pc"> </br>
+  </label>
+  <button type="submit" id="B1" value="Start" style="width: 3pc" onclick="primDichteVor()" text x="90" y="110"
+    fill="white" font-size="68px">Start</text>
+  </button>
+  <p id="output">
+  </p>
+
+  <table border="1">
+    <colgroup>
+      <col width=120>
+      <col width=100>
+    </colgroup>
+    <tr>
+      <th>Element</th>
+      <th>Anteil in mg</th>
+    </tr>
+    <tr>
+      <td>Natrium</td>
+      <td align="right">10,300</td>
+    </tr>
+    <tr>
+      <td>Nitrat</td>
+      <td align="right">0,117</td>
+    </tr>
+    <tr>
+      <td>Hydrogencarbonat</td>
+      <td align="right">330,000</td>
+    </tr>
+  </table>
+
+
+</body>
+
+<script language="JavaScript">
+
+  let TextSumme = ``;
+
+  let a, b, c, Schritt;
+
+  primDichteVor();
+
+  function CB1Sichtbarkeit(Knopf) {
+    if (Knopf.value > 1) {
+      CB1.checked = false;
+      CB1.style.visibility = 'hidden'
+    }
+    else
+      CB1.style.visibility = 'visible'
+  };
+
+  function qFunktion(x) {
+    return (a * Math.pow(x, 2) + b * x + c);
+  }
+
+  function PrimZahl(num) {
+    if (num < 2) return false;
+    for (let i = 2; i <= Math.sqrt(num); i++) {
+      if (num % i === 0) return false;
+    }
+    return true;
+  }
+
+  function primDichteVor() {
+    a = parseInt(InpF1.value);
+    b = parseInt(InpF2.value);
+    c = parseInt(InpF3.value);
+    let iMi = parseInt(InpF4.value);
+    Schritt = parseInt(InpF5.value);
+    let iMa = iMi + Schritt - 1;
+    if (document.getElementById('CB1').checked)
+      primDichte1(iMi, iMa)
+    else {
+      let jMa = parseInt(InpF6.value);
+      primDichte2(iMi, iMa, jMa);
+    }
+  }
+
+  function primDichte1(iMin, iMax) {
+    InpF6.value = 1;
+    TextSumme = "";
+    TextProben = "";
+    let positiveProben = 0;
+    for (i = iMin; i <= iMax; i++) {
+      let z = qFunktion(i);
+      let zStr = z.toLocaleString();
+      if (PrimZahl(z)) {
+        positiveProben++;
+        TextProben += `f(${i}) =  <span style='color: #FF0000;'>  ${zStr} </span> </br>`  // rot
+      }
+      else
+        TextProben += `f(${i}) =  <span style='color: #000000;'>  ${zStr} </span> </br>`;  // schwarz
+    };
+    let tableProben = "<table border='1'><tr><th>Probe</th><th>x</th><th>y=f(x)</th></tr>";
+    for (i = iMin; i <= iMax; i++) {
+      let z = qFunktion(i);
+      let zStr = z.toLocaleString(undefined, {
+        minimumIntegerDigits: 1, // Mindestens 1 Ziffer anzeigen (rechtsbündig)
+        useGrouping: true, // Aktiviert die Verwendung von Tausendertrennzeichen
+      });
+      if (PrimZahl(z)) {
+        tableProben += `<tr><td>${i - iMin + 1}</td><td align=right>${i}</td><td align=right style='color: #FF0000;'>${zStr}</td></tr>`;
+      } else {
+        tableProben += `<tr><td>${i - iMin + 1}</td><td align=right>${i}</td><td align=right>${zStr}</td></tr>`;
+      }
+    }
+    tableProben += "</table>";
+
+    let anzahl = iMax - iMin + 1;
+    let quotient = positiveProben / anzahl;
+    TextSumme = `Es gibt ${anzahl} Proben x von ${iMin} bis ${iMax}. </br>Die ${positiveProben} Werte y=f(x) sind Primzahlen. </br>Quotient : ${quotient}. </br>` + TextSumme;
+    document.getElementById("output").innerHTML = TextSumme + tableProben;
+  }
+
+  function primDichte2(iMin, iMax, jMax) {
+    TextProben = "";
+    TextSumme = "";
+    let tableSumme = "<table border='1'><tr><th>Reihe</th><th>xMin</th><th>xMax</th><th>yPrimzahlen</th><th>Quotient</th></tr>";
+
+    for (j = 1; j <= jMax; j++) {
+      let positiveProben = 0;
+      for (i = iMin; i <= iMax; i++) {
+        let z = qFunktion(i);
+        if (PrimZahl(z)) {
+          positiveProben++;
+        }
+      }
+      let anzahl = iMax - iMin + 1;
+      let quotient = (positiveProben / anzahl).toLocaleString(undefined, {
+        minimumFractionDigits: 3,
+        useGrouping: false, // Deaktiviert die Verwendung von Tausendertrennzeichen (optional)
+      });
+      //TextSumme += `Von ${iMin} bis ${iMax} gibt es ${positiveProben} Primzahlen.  Quotient : ${quotient}. </br>`;
+      tableSumme += `<tr><td align=right>${j}</td><td align=right>${iMin}</td><td align=right>${iMax}</td><td align=right>${positiveProben}</td><td align=right>${quotient}</td></tr>`;
+
+      iMin = iMin + Schritt;
+      iMax = iMin + Schritt - 1;
+    }
+    tableSumme += "</table>";
+    document.getElementById("output").innerHTML = tableSumme;
+  }
+
+</script>
+
+</html>

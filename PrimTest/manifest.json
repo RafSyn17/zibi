@@ -1,0 +1,16 @@
+{
+    "name": "PrimTest",
+    "short_name": "PrimTest",
+    "theme_color": "#262626",
+    "background_color": "#262626",
+    "display": "standalone",
+    "start_url": "./index.html",
+    "description": "PrimTest_desc",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "./primtest.png",
+            "sizes": "192x192"
+        }
+    ]
+}
