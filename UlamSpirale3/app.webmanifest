@@ -1,0 +1,17 @@
+{
+    "name": "UlamSpirale3",
+    "short_name": "Ulam3",
+    "theme_color": "#ffcbe4",
+    "background_color": "#fa99ca",
+    "display": "fullscreen",
+    "start_url": "./index.html",
+    "id": "ulam",
+    "description": "UlamSpirale3",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "./icon192.png",
+            "sizes": "192x192"
+        }
+    ]
+}

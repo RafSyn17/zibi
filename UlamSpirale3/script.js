@@ -152,7 +152,7 @@ function handleCanvasClick(x, y) {
                 ctx.fillRect(xi, yi, pixelSize, pixelSize);
             }
         }
-        text += ` Primzahlenhäufigkeiten:`;
+        text += `</br>Primzahlenhäufigkeiten:`;
         prHa1 = Math.round(iProbenPositiv1 / iProben * 10000) / 100;
         text += ` <span style='color: blue;'> ${prHa1} </span>% ,`;
         prHa2 = Math.round(iProbenPositiv2 / iProben * 10000) / 100;
