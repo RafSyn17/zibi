@@ -3,28 +3,26 @@ var cacheName = 'CacheQGleichung';
 
 // Dateien, die im Cache gespeichert werden sollen
 var filesToCache = [
-    './',
-    './index.html',
-    'https://rsy17.de/zibi/QuadratischeGleichung/index.html'
+  "./index.html"
 ];
 
 // Installation des Service Workers
-self.addEventListener('install', function(event) {
+self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(cacheName)
-      .then(function(cache) {
+      .then(function (cache) {
         return cache.addAll(filesToCache);
       })
   );
 });
 
 // Aktivierung des Service Workers
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.keys()
-      .then(function(cacheNames) {
+      .then(function (cacheNames) {
         return Promise.all(
-          cacheNames.map(function(name) {
+          cacheNames.map(function (name) {
             if (name !== cacheName) {
               return caches.delete(name);
             }
@@ -35,10 +33,10 @@ self.addEventListener('activate', function(event) {
 });
 
 // Intercept fetch requests
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
     caches.match(event.request)
-      .then(function(response) {
+      .then(function (response) {
         if (response) {
           return response;
         }
