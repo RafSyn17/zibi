@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="./icon192.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ulam Spirale1.5</title>
+  <title>Ulam Spirale 1.5</title>
   <link rel="stylesheet" href="./style.css" />
   <script type="module" src="./registersw.js"></script>
   <link rel="manifest" href="./app.webmanifest">
@@ -33,7 +33,6 @@
   </div>
 
   <script>
-
 
     let Skalierung, Faktor, dm, It, ItMax, n, Zahl, ZahlenProSeite, ZahlMin, ZahlMax, Seite, dx, dy, ctx, x, y;
     Seite = 1;
@@ -261,16 +260,18 @@
     }
 
     function ulamSpiraleZahl(x, y) {
+      // r = Radius des inneren Kreises eines Quadrates
       // Falls Radius r nicht bekannt wäre, dann hier so ermitteln
-      // const r = Math.max(Math.abs(x), Math.abs(y)); // Radius des inneren Kreises eines Quadrates
-      const b = 2 * r + 1;      // basis
-      const m = Math.pow(b, 2); // max = (2r+1)²
+      // const r = Math.max(Math.abs(x), Math.abs(y)); 
+      const b = 2 * r + 1;      // Basis
+      const m = Math.pow(b, 2); // m = (2r+1)² . Der maximale Wert in einem Quadrat
       let s = Math.sign(y - x); // Vorzeichen der Differenz der Koordinaten
       s = - s * s + s + 1;      // aus 0 macht 1 , sonst -1 bleibt -1 und 1 bleibt 1.
       let d = 4 - 2 * s;        // Differenz zu m in Radien. ( d=2, wenn s = 1, d=6, wenn s = -1)
       //  __
       // |     oben oder links  ( s = 1  ) wird die Summe der Koordinaten zu  m addiert   und dann werden 2 Radien abgezogen
       //  __|  unten und rechts ( s = -1 ) wird die Summe der Koordinaten von m abgezogen und dann werden 6 Radien agbezogen
+      // Falls die Mitte nicht 1 ist wird noch der Wert ( Mitte - 1) draufaddiert
       return (m + s * (x + y) - d * r + Mitte - 1);
     }
 
@@ -339,6 +340,34 @@
         };
         i++;
       } while (i <= 8 * r);
+    }
+
+    function NaechstesQuadratderUlamSpirale() {
+
+      x = r;
+      y = r;
+      //z = Math.pow(2 * r + 1, 2) + Mitte; // Maximale Zahl in einem Quadrat + 1 d.h. obere rechte Ecke
+
+      let dxy = -1;
+      let iMax = 4 * r;
+
+      for (i = 1; i <= 8 * r + 1; i++) {
+
+        if (i <= iMax) {
+          if (i <= iMax - 2 * r) {
+            y += dxy                    // 1 Lauf rechte Seite, 2 Lauf linke Seite
+          }
+          else {
+            x += dxy                    // 1 Lauf untere Seite, 2 Lauf obere Seite
+          };
+          anzeige(x, y, z);           // Am Anfang ein Feld unter der Ecke oben rechts anzeigen, dann im Uhrzeigersinn
+          z++;
+        }
+        else {
+          iMax = 8 * r + 1;
+          dxy = -dxy;
+        };
+      }
     }
 
     function MaleUlamSpirale() {
@@ -411,46 +440,18 @@
       ctx.strokeRect(0, 0, n, n);
 
       Mitte = parseInt(InpF0.value);       // in der Mitte muss nicht unbedingt 1 stehen. z.B. 41 in der Mitte ergibt 40 Primzahlen
-      iMax = Math.floor(center / Faktor);  // Anzahl der Radien
+      let rMax = Math.floor(center / Faktor);  // Anzahl der Radien
+      z = Mitte;
 
-      for (i = 0; i < iMax; i++) {
-        // Quadrate mit innerem Kreis mit dem Radius r = 0 beiginnend zeichnen
-        r = i;
-        EinQuadratderUlamSpirale();
+      anzeige(0, 0, z);           // Am Anfang die Mitte anzeigen
+      z++;
+      for (r = 1; r < rMax; r++) {
+        // Quadrate mit innerem Kreis mit dem Radius r = 1 beiginnend zeichnen
+        NaechstesQuadratderUlamSpirale()
       }
+      InpF3.value = z - 1;                // die höchste gesehene Zahl in InpF3 speichern
 
       return;
-
-      //if (Seite < 1) {
-      //  InpF2.value = 1;
-      //  return;
-      // }
-
-      //InpF2.value = seite;
-      // Zahl = (Seite - 1) * ZahlMax + 1; //1441201 + 1;
-      ctx.clearRect(0, 0, n, n);
-      ctx.strokeRect(0, 0, n, n);
-
-      x = center + dm;
-      y = center - dm;
-      dx = Faktor;
-      dy = Faktor;
-      ItMax = 1;
-      It = 1;
-
-      //Startpunkt
-      x = x - dx;
-      pruefe();
-
-      Zahl++;
-      x += dx;
-
-
-      // requestAnimationFrame(malePunkt);
-      malePunkte();
-      // j++;
-      //if (j <= j_max)
-      //    setTimeout(MaleUlamSpirale, 1000);
 
     }
 

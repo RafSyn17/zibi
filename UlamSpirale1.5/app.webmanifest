@@ -1,13 +1,13 @@
 {
-    "name": "Ulam Spirale1.5",
-    "short_name": "Ulam",
+    "name": "UlamSpirale1.5",
+    "short_name": "Ulam1.5",
     "theme_color": "#ffcbe4",
     "background_color": "#fa99ca",
     "display": "fullscreen",
     "start_url": "./index.html",
     "id": "ulam",
-    "description": "Ulam Spirale Zeichnung",
-    "orientation": "landscape",
+    "description": "Ulam1.5_desc",
+    "orientation": "any",
     "icons": [
         {
             "src": "./icon192.png",
