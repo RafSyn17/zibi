@@ -191,7 +191,7 @@ function getTooltipData(x, y) {
     yA = Math.floor(y / pixelSize);
     let xRel = xA + xOff;
     let yRel = - (yA + yOff);
-    let delta = (yRel - xRel);
+    // let delta = (yRel - xRel);
 
     const zahl = getUlamNumber(xA + xOff, -(yA + yOff));
     const zahlStr = zahl.toLocaleString();
@@ -245,6 +245,7 @@ function getTooltipData(x, y) {
     let txt;
 
     if (isPrime) {
+        let delta = (yRel - xRel);
         // if (yRel >= 0 && yRel >= Math.abs(xRel) || xRel >= 0 && xRel >= Math.abs(yRel)) {
         // es geht doch viel einfacher :-)
         if (yRel >= - xRel) {
@@ -277,6 +278,7 @@ function getTooltipData(x, y) {
                     txt = `<span style='color: blue;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 1</span>.`
             }
         }
+        
         prHa1 = Math.round(iProbenPositiv1 / iProben * 10000) / 100;
         txt = txt + ` <span style='color: blue;'>Primzahlenhäufigkeit: ${prHa1}%.</span></br>`;
         //txt += "&#010;";
@@ -286,37 +288,37 @@ function getTooltipData(x, y) {
         if (yRel >= xRel) {
             let n = Math.max(Math.abs(xRel), Math.abs(yRel));  // ( zahl + summe ) = (4*n² + 2*n + 1)
             let c = 1 + summe;
-            //txt = `(${xRel}, ${yRel}). Formel: f(n) = 4n² + 2n  + 1 - ${delta}. Primzahl: ${zahl}= f(${n}). `;
+            //txt = `(${xRel}, ${yRel}). Formel: g(n) = 4n² + 2n  + 1 + ${summe}. Primzahl: ${zahl}= f(${n}). `;
             if (c > 0) {
-                txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 2n + ${c}</span>.`
+                txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² + 2n + ${c}</span>.`
             }
             else {
                 if (c < 0)
-                    txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 2n - ${-c}</span>.`
+                    txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² + 2n - ${-c}</span>.`
                 else
-                    txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 2n + 1</span>.`
+                    txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² + 2n + 1</span>.`
             }
         }
 
         else {
-            let n = Math.max(Math.abs(xRel), Math.abs(yRel));;  // (zahl - delta) = (2*n)² -2n + 1
+            let n = Math.max(Math.abs(xRel), Math.abs(yRel));  // (zahl - summe) = (2*n)² -2*n + 1
 
             let c = 1 - summe;
 
             if (c > 0) {
-                txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² - 2n + ${c}</span>.`
+                txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² - 2n + ${c}</span>.`
             }
             else {
                 if (c < 0)
-                    txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² - 2n - ${-c}</span>.`
+                    txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² - 2n - ${-c}</span>.`
                 else
-                    txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² - 2n + 1</span>.`
+                    txt += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² - 2n + 1</span>.`
             }
         }
         prHa2 = Math.round(iProbenPositiv2 / iProben * 10000) / 100;
         txt = txt + ` <span style='color: green;'>Primzahlenhäufigkeit: ${prHa2}%.</span>`;
-
     }
+
     else {
         txt = `${zahlStr} = (${xRel}, ${yRel})`
     };
