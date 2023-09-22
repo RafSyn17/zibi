@@ -88,9 +88,10 @@ function drag(newX, newY) {
 function handleCanvasClick(x, y) {
     let ulamX = Math.floor((x + xOff) / pixelSize);
     let ulamY = -Math.floor((y + yOff) / pixelSize);
-    let number = getUlamNumber(ulamX, ulamY);
-    let isPrime = isPrimeSimple(number);
-    let text = "" + number + "=(" + ulamX + "," + ulamY + ")";
+    let zahl = getUlamNumber(ulamX, ulamY);
+    let isPrime = isPrimeSimple(zahl);
+    const zahlStr = zahl.toLocaleString();
+    let text = "" + zahlStr + "=(" + ulamX + "," + ulamY + ")";
     //let [xStart, yStart] = getTopLeftXY();
     //let imageData = ctx.getImageData(xStart, yStart, canvas.width, canvas.height);
 
@@ -107,7 +108,7 @@ function handleCanvasClick(x, y) {
 
     if (isPrime) {
 
-        text += " ist eine Primzahl.";
+        //let text = "";
 
         let iProbenPositiv1 = 0;
         let iProbenPositiv2 = 0;
@@ -152,11 +153,82 @@ function handleCanvasClick(x, y) {
                 ctx.fillRect(xi, yi, pixelSize, pixelSize);
             }
         }
-        text += `</br>Primzahlenhäufigkeiten:`;
+
+        // text += `</br>Primzahlenhäufigkeiten:</br>`;
+        let xRel = ulamX;
+        let yRel = ulamY;
+
+        let delta = (yRel - xRel);
+        if (yRel >= - xRel) {
+            let n = (Math.sqrt(zahl + delta) - 1) / 2; //  zahl = (2*n + 1)² - delta     
+            // let n = Math.max(Math.abs(xRel), Math.abs(yRel));   
+            let c = 1 - delta;
+            //txt = `(${xRel}, ${yRel}). Formel: f(n) = 4n² + 4n  + 1 - ${delta}. Primzahl: ${zahl}= f(${n}). `;
+            if (c > 0) {
+                text = `<span style='color: blue;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 4n + ${c}</span>.`
+            }
+            else {
+                if (c < 0)
+                    text = `<span style='color: blue;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 4n - ${-c}</span>.`
+                else
+                    text = `<span style='color: blue;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 4n + 1</span>.`
+            }
+        }
+
+        else {
+            let n = Math.sqrt((zahl - delta - 1) / 4);  // zahl = (2*n)² + 1 + delta
+            let c = 1 + delta;
+
+            if (c > 0) {
+                text = `<span style='color: blue;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + ${c}</span>.`
+            }
+            else {
+                if (c < 0)
+                    text = `<span style='color: blue;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² - ${-c}</span>.`
+                else
+                    text = `<span style='color: blue;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=f(${n}). f(n) = 4n² + 1</span>.`
+            }
+        };
+
+
         prHa1 = Math.round(iProbenPositiv1 / iProben * 10000) / 100;
-        text += ` <span style='color: blue;'> ${prHa1} </span>% ,`;
+        text += ` <span style='color: blue;'></br>Primzahlenhäufigkeit: ${prHa1} % .</span> </br>`;
+
+        let summe = yRel + xRel;
+        if (yRel >= xRel) {
+            let n = Math.max(Math.abs(xRel), Math.abs(yRel));  // ( zahl + summe ) = (4*n² + 2*n + 1)
+            let c = 1 + summe;
+            // Formel: g(n) = 4n² + 2n  + 1 + ${summe}. Primzahl: ${zahl}= f(${n}). `;
+            if (c > 0) {
+                text += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² + 2n + ${c}</span>.`
+            }
+            else {
+                if (c < 0)
+                    text += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² + 2n - ${-c}</span>.`
+                else
+                    text += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² + 2n + 1</span>.`
+            }
+        }
+
+        else {
+            let n = Math.max(Math.abs(xRel), Math.abs(yRel));  // (zahl - summe) = (2*n)² -2*n + 1
+
+            let c = 1 - summe;
+
+            if (c > 0) {
+                text += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² - 2n + ${c}</span>.`
+            }
+            else {
+                if (c < 0)
+                    text += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² - 2n - ${-c}</span>.`
+                else
+                    text += `<span style='color: green;'>Primzahl: ${zahlStr}=(${xRel}, ${yRel})=g(${n}). g(n) = 4n² - 2n + 1</span>.`
+            }
+        }
+
+
         prHa2 = Math.round(iProbenPositiv2 / iProben * 10000) / 100;
-        text += ` <span style='color: green;'> ${prHa2} </span>% .`;
+        text += ` <span style='color: green;'></br>Primzahlenhäufigkeit: ${prHa2} % .</span>`;
     }
 
     // tooltip.textContent = text;
